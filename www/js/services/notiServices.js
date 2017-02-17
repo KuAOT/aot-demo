@@ -79,7 +79,7 @@ angular.module('starter')
         //on message event
         messaging.onMessage(function(payload) {
           console.log("Message received. ", payload);
-          ProcessNotification(payload.data,$ionicPopup);
+          ProcessNotification(payload.data,$ionicPopup,$cordovaDevice);
         });
 
       });
@@ -107,7 +107,7 @@ angular.module('starter')
     $rootScope.$on('$cordovaPushV5:notificationReceived', function(event, notification) {
       notiData = notification;
       console.log(notification);
-      ProcessNotification(notification,$ionicPopup);
+      ProcessNotification(notification,$ionicPopup,$cordovaDevice);
       // //android part
       // if(isAndroid){
       //     switch(notification.event) {
@@ -173,10 +173,15 @@ angular.module('starter')
       });
     };
 
-    function ProcessNotification(data,$ionicPopup){
+    function ProcessNotification(data,$ionicPopup,$cordovaDevice){
 
       var alertType = (onWeb) ? data.alertType : data.additionalData.alertType;
-      var messageType = (onWeb) ? data.messageType : data.additionalData.messageType;
+      var messageType 
+      if (onWeb) messageType = data.messageType
+      else{
+        if(GetOS($cordovaDevice) == 'Android') messageType = data.additionalData.messageType 
+        else messageType = JSON.parse(data.additionalData.messageType);
+      }
       var menu = (onWeb) ? data.menu : data.additionalData.menu;
 
       //check if force logout from server
