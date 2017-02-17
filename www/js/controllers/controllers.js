@@ -21,40 +21,57 @@ angular.module('starter')
 
       $ionicPlatform.ready(function(){
 
+        $scope.isRegistGCM = false;
+
         // if access with not support browser will end process
         if(CheckBrowserIsNotChrome()) return;
         
         //check open application in mobile browser?
         CheckOpenApplicationOnMobileDevice($q,APIService,$ionicPopup);
 
-        APIService.ShowLoading();
-        //Login api
-        LogInAPI(AUTH_EVENTS,APIService,$http,$q,$cordovaNetwork, $ionicPopup).then(function(){
-          APIService.HideLoading();
+        $scope.processAfterLogInAPI = function()
+        {
           //check is server released new version? if have new version then confirm user to update on each store
           CheckDeviceIsValid(APIService,$q,window.localStorage.getItem('GCMToken')).then(function(response){
             if(response != null && response.data != null){
-              // //check the store have newest version?
-              // CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,response.data.LastestVersion);
+              //check the store have newest version?
+              CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,response.data.LastestVersion);
             }
           });
+
           //check is new version? if yes then popup and alter table
           CheckIsUpdateVersion($q,SQLiteService,APIService,$ionicPopup);
+          
           //authen
           $rootScope.$broadcast('checkAuthen', null);
+          
+          //bypass login if still loging in.
+          AuthService.bypassLogIn();
+        }
+
+        APIService.ShowLoading();
+        //Login api
+        LogInAPI(AUTH_EVENTS,APIService,$http,$q,$cordovaNetwork, $ionicPopup).then(function(){
+
+          APIService.HideLoading();
+
           //post to gcm(google cloud messaging) for register device and get token from gcm
           if (window.cordova){
             NotiService.Register().then(function(){
+              $scope.isRegistGCM = true;
+              $scope.processAfterLogInAPI();
               CheckForceLogOut($ionicPopup,APIService,AuthService,$q,$cordovaFile,$cordovaDevice);
             });
           }
           //else window.localStorage.setItem('GCMToken',PCGCMToken);
           else{
             //register gcm for desktop
-            NotiService.DesktopRegister().then(function(){});
+            NotiService.DesktopRegister().then(function(){
+              $scope.isRegistGCM = true;
+              $scope.processAfterLogInAPI();
+            });
           }
-          //bypass login if still loging in.
-          AuthService.bypassLogIn();
+
         },function(error){console.log('LogInAPI-Error',error)});
 
         $scope.onWeb = onWeb;

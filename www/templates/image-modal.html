@@ -1,28 +1,41 @@
 <style type="text/css">
-.transparent {
-  background: transparent !important;
-}
-.image-modal {
-  width: 100% !important;
-  height: 100%;
-  top: 0 !important;
-  left: 0 !important;
-}
-.fullscreen-image {
-  max-width: 100%;
-  max-height: 100%;
-  bottom: 0;
-  left: 0;
-  margin: auto;
-  overflow: auto;
-  position: fixed;
-  right: 0;
-  top: 0;
+.img-center {
+    position:absolute;
+    left: 0;
+    right: 0;
+    margin:0 auto;
+    top:50%;
+    transform:translateY(-50%);
 }
 </style>
 
-<div class="modal image-modal transparent" ng-click="closeModal()">
-    <ion-pane class="transparent">
-       <img ng-src="{{imageSrc}}" class="fullscreen-image"/>
-    </ion-pane>
-</div>
+<ion-modal-view>
+
+  <ion-content ng-click='closeModal()'>
+
+    <ion-header-bar class="bar-calm">
+      <h1 class="title"></h1>
+      <!-- <div class="buttons">
+        <button class="button icon ion-close-round" ></button>
+      </div> -->
+    </ion-header-bar>
+
+    <div ng-if='!onWeb'>
+      <img ng-src="{{imageSrc}}" class='full-image img-center'/>  
+    </div>
+  
+    <div ng-if='onWeb' class='row'>
+      <div class='col col-33'>
+      </div>
+      <div class='col col-33' style='margin-top:85px;'>
+        <img ng-src="{{imageSrc}}" class='full-image'/>
+      </div>
+      <div class='col col-33'>
+      </div>
+    </div>    
+    
+  </ion-content>
+
+
+
+</ion-modal-view>

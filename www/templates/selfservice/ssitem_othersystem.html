@@ -28,7 +28,7 @@
           <p ng-show='DocumentObject.length == 0'>ไม่พบเอกสารแนบ</p>
         </div>
 
-        <div ng-show='showSignature'>
+        <!-- <div ng-show='showSignature'>
           <div class='item item-divider'>
             <h2><b>ลายเซ็น</b></h2>
           </div>
@@ -37,7 +37,7 @@
             <img ng-show='SignatureObject.length > 0' src="{{SignatureObject}}" />
             <p ng-show='SignatureObject.length == 0'>ไม่พบลายเซ็น</p>
           </div>  
-        </div>
+        </div> -->
         
         <!-- section-history -->
         <!-- <div class='item item-divider'>
@@ -51,9 +51,25 @@
             <ion-item class="item-stable" ng-click="toggleGroup(group)" ng-class="{active: isGroupShown(group)}">
                 <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>&nbsp;<b>{{group.name}}</b>
             </ion-item>
-            <ion-item class="item-accordion item-text-wrap" ng-show="isGroupShown(group)" ng-repeat="item in group.items">
+
+            <!-- <ion-item class="item-accordion item-text-wrap" ng-show="isGroupShown(group)" ng-repeat="item in group.items">
                 <p><b>{{item.RouteName}} :</b> {{item.RouteName}} , {{item.UpdateBy}} , {{item.UpdateDate}}</p>
-          </ion-item>
+            </ion-item> -->
+
+            <ion-item class="item-accordion item-text-wrap" ng-show="isGroupShown(group)" ng-repeat="item in group.items">
+
+              <div ng-show='item.SignatureObject && item.SignatureObject.length > 0' class='item-thumbnail-left item-text-wrap'>
+                <img ng-src='data:image/png;base64,{{item.SignatureObject}}' ng-click='openModal({{item.index}})' />
+                <h2>{{item.RouteName}}</h2>
+                <p>{{item.RouteName}} , {{item.UpdateBy}} , {{item.UpdateDate}}</p> 
+              </div>
+
+              <div ng-show='!item.SignatureObject || item.SignatureObject.length == 0' class='item-text-wrap'>
+                <p><b>{{item.RouteName}} :</b> {{item.RouteName}} , {{item.UpdateBy}} , {{item.UpdateDate}}</p> 
+              </div>
+                <!-- <p><b>{{item.RouteName}} :</b> {{item.ActionTypeName}} , {{item.UpdateBy}}, {{item.Device}} , {{item.UpdateDate}}</p> -->
+            </ion-item>
+
         </div>
         <!-- <div class='item item-text-wrap' >
           <p>InworkFlow , นาย สนธยา วิไลจิตต์ , 28 ก.ค. 2559 เวลา 15:32</p>

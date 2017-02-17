@@ -42,7 +42,7 @@ angular.module('starter')
   this.SyncTime = function(){
     var myEmpId = window.localStorage.getItem("CurrentUserName"); // '576222' **Hard-Code**
     var apiDatas = {
-      GetData:{ObjectID:2,SyncTAViewModel:{EmpID: myEmpId, FromDate: GetFiscalDate(1), ToDate: GetCurrentDate().replace(/\//g,'')}},
+      GetData:{ObjectID:2,SyncTAViewModel:{EmpID: myEmpId, FromDate: GetDateSubtract(45).replace(/\//g,''), ToDate: GetCurrentDate().replace(/\//g,'')}},
       AddData:{ObjectID:2,ObjectTAEntity:{}},
       UpdateData:{ObjectID:2,ObjectTAEntity:{}},
     };
@@ -53,7 +53,7 @@ angular.module('starter')
   this.SyncTimeReport = function(){
     var myEmpId = window.localStorage.getItem("CurrentUserName");
     var apiDatas = {
-      GetData:{ObjectID:12,SyncTAReportViewModel:{EmpID: myEmpId, FromDate: GetFiscalDate(1), ToDate: GetCurrentDate().replace(/\//g,'')}},
+      GetData:{ObjectID:12,SyncTAReportViewModel:{EmpID: myEmpId, FromDate: GetFiscalDate(1), ToDate: GetDateSubtract(30).replace(/\//g,'')}},
       AddData:{ObjectID:12,ObjectTAReportEntity:{}},
       UpdateData:{ObjectID:12,ObjectTAReportEntity:{}},
     };

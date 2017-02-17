@@ -437,23 +437,7 @@ angular.module('starter')
 
 	$ionicPlatform.ready(function(){
 
-		// $scope.modal = null;
-
-		// $ionicModal.fromTemplateUrl('templates/image-modal.html', {
-		// 	scope: $scope,
-		// 	animation: 'slide-in-up'
-		// }).then(function(modal) {
-		// 	$scope.modal = modal;
-		// });
-
-		// $scope.openModal = function(index) {
-		// 	$scope.imageSrc = 'data:image/png;base64,' + $scope.signatureArr[index];
-		//     $scope.modal.show();
-		// };
-
-		// $scope.closeModal = function() {
-		//   	$scope.modal.hide();
-		// };
+		InitialModalImage($scope,$ionicModal);
 
 		//actiontype : 2 = approve , 5 = reject , 3 = acknowledge
 		$scope.popUpDetails = {title:'',subtitle:'',actiontype:0};
@@ -805,8 +789,10 @@ angular.module('starter')
 	});
 })
 
-.controller('ItemLeaveCtrl',function($scope,$cordovaNetwork,$stateParams,$ionicPopup,$ionicPlatform,WorkFlowService,$filter){
+.controller('ItemLeaveCtrl',function($scope,$cordovaNetwork,$stateParams,$ionicPopup,$ionicPlatform,WorkFlowService,$filter,$ionicModal){
 	$ionicPlatform.ready(function(){
+
+		InitialModalImage($scope,$ionicModal);
 
 		$scope.LeaveDetails = {};
 		$scope.LeaveHistories = [];
@@ -891,14 +877,21 @@ angular.module('starter')
 			$scope.LeaveDetails.DocumentTitle = data.HistoryWorkflow[0].DocumentTitle;
 			$scope.LeaveDetails.DocumentDescription = data.HistoryWorkflow[0].DocumentDescription;
 
+			//declare signature array for stored base64str for image popup
+	    	$scope.signatureArr = [];
+	    	var index = 0;
+
 			angular.forEach(data.HistoryWorkflow,function(value,key){
 	        	$scope.historyGroups[0].items.push({
 		    		UpdateBy:value.UpdateBy,
 		    		UpdateDate:GetThaiDateTimeByDate($filter,value.UpdateDate),
 		    		ActionTypeName:value.ActionTypeName,
 		    		RouteName:value.RouteName,
-		    		SignatureObject:value.SignatureObject
+		    		SignatureObject:value.SignatureObject,
+		    		index:index
 		    	});	
+		    	$scope.signatureArr.push(value.SignatureObject);
+		    	index++;
 	      	});
 	    };
 
@@ -1024,8 +1017,11 @@ angular.module('starter')
 
 })
 
-.controller('ItemTimeWorkCtrl',function($scope,$cordovaNetwork,$stateParams,$ionicPopup,$ionicPlatform,WorkFlowService,$filter){
+.controller('ItemTimeWorkCtrl',function($scope,$cordovaNetwork,$stateParams,$ionicPopup,$ionicPlatform,WorkFlowService,$filter,$ionicModal){
 	$ionicPlatform.ready(function(){
+
+		InitialModalImage($scope,$ionicModal);
+
 		$scope.TimeWorkDetails = {};
 		$scope.TimeWorkHistories = [];
 		//actiontype : 2 = approve , 5 = reject , 3 = acknowledge
@@ -1086,8 +1082,13 @@ angular.module('starter')
 			$scope.TimeWorkDetails.EndDate = GetThaiDateTimeByDate($filter,data[0].ToDate);
 			$scope.TimeWorkDetails.TimeWith = data[0].TimeWith;
 			var result = [];
+			//declare signature array for stored base64str for image popup
+	    	$scope.timeWithArr = [];
+			var index = 0;
 			for (var i = 0; i <= data[0].Image.length - 1; i++) {
-				result.push({PHOTO:data[0].Image[i].PHOTO,ACCESS_TIME:GetTimeFromDatePointFormat(data[0].Image[i].ACCESS_TIME)});
+				result.push({PHOTO:data[0].Image[i].PHOTO,ACCESS_TIME:GetTimeFromDatePointFormat(data[0].Image[i].ACCESS_TIME),index:index});
+				$scope.timeWithArr.push(data[0].Image[i].PHOTO);
+				index++;
 			};
 			$scope.TimeWorkDetails.TimeWithImages = result;
 		};
@@ -1101,15 +1102,23 @@ angular.module('starter')
 			$scope.TimeWorkDetails.DocumentTitle = data.HistoryWorkflow[0].DocumentTitle;
 			$scope.TimeWorkDetails.DocumentDescription = data.HistoryWorkflow[0].DocumentDescription;
 
+			//declare signature array for stored base64str for image popup
+	    	$scope.signatureArr = [];
+	    	var index = 0;
+
 			angular.forEach(data.HistoryWorkflow,function(value,key){
 	        	$scope.historyGroups[0].items.push({
 		    		UpdateBy:value.UpdateBy,
 		    		UpdateDate:GetThaiDateTimeByDate($filter,value.UpdateDate),
 		    		ActionTypeName:value.ActionTypeName,
 		    		RouteName:value.RouteName,
-		    		SignatureObject:value.SignatureObject
+		    		SignatureObject:value.SignatureObject,
+		    		index:index
 		    	});	
+		    	$scope.signatureArr.push(value.SignatureObject);
+		    	index++;
 	      	});
+	      	
 		};
 
 		$scope.confirmApproveOrReject = function(isApprove){
@@ -1120,6 +1129,8 @@ angular.module('starter')
 })
 .controller('ItemOtherSystemCtrl',function($scope,$cordovaNetwork,$stateParams,$ionicPopup,$ionicPlatform,WorkFlowService,$filter,$q,$cordovaFile,$cordovaFileOpener2,APIService,$ionicModal){
 	$ionicPlatform.ready(function(){
+
+		InitialModalImage($scope,$ionicModal);
 
 		$scope.RequestDetails = {};
 		$scope.RequestHistories = [];
@@ -1227,17 +1238,26 @@ angular.module('starter')
 	    	$scope.showBtnAcknowledgment = data.Acknowledgment;
 			$scope.showBtnApprove = data.Approve;
 			$scope.stateNextLevel = data.StateNextLevel;
+			$scope.showSignature = data.Signature;
 			
 			$scope.RequestDetails.DocumentTitle = data.HistoryWorkflow[0].DocumentTitle;
 			$scope.RequestDetails.DocumentDescription = data.HistoryWorkflow[0].DocumentDescription;
+
+			//declare signature array for stored base64str for image popup
+	    	$scope.signatureArr = [];
+	    	var index = 0;
 
 			angular.forEach(data.HistoryWorkflow,function(value,key){
 	        	$scope.historyGroups[0].items.push({
 		    		UpdateBy:value.UpdateBy,
 		    		UpdateDate:GetThaiDateTimeByDate($filter,value.UpdateDate),
 		    		ActionTypeName:value.ActionTypeName,
-		    		RouteName:value.RouteName
+		    		RouteName:value.RouteName,
+		    		SignatureObject:value.SignatureObject,
+		    		index:index
 		    	});	
+		    	$scope.signatureArr.push(value.SignatureObject);
+		    	index++;
 	      	});
 	    };
 

@@ -1,16 +1,21 @@
 <ion-modal-view>
   <ion-header-bar class="bar-calm">
-    <h1 class="title">Login</h1>
+    <h1 class="title">เข้าสู่ระบบ</h1>
     <div class="buttons">
-      <button class="button button-clear" ng-click="closeLogin()">Close</button>
+      <button class="button button-clear" ng-click="closeLogin()">ปิด</button>
     </div>
   </ion-header-bar>
   <ion-content>
     <form name="logInForm" novalidate="" ng-submit="doLogin(logInForm)">
+ 
       <div class="list">
 
+        <div class='item item-image' style='padding:0px 25px 0px 25px;'>
+          <img src="img/aottxt_logo.jpg">
+        </div>
+
         <label class="item item-input item-stacked-label login_input" ng-class="{ 'has-errors' : logInForm.username.$invalid, 'no-errors' : logInForm.username.$valid}">
-          <span class="input-label">Username</span>
+          <!-- <span class="input-label">Username</span> -->
           <input type="number" name='username' placeholder="รหัสพนักงาน" ng-model="loginData.username" required>
         </label>
         <div class="error-container" ng-show="logInForm.username.$error" ng-messages="logInForm.$submitted && logInForm.username.$error">
@@ -22,7 +27,7 @@
         </label> -->
 
         <label class="item item-input item-stacked-label login_input" ng-class="{ 'has-errors' : logInForm.password.$invalid, 'no-errors' : logInForm.password.$valid}">
-          <span class="input-label">Password</span>
+          <!-- <span class="input-label">Password</span> -->
           <input type="password" name='password' placeholder="รหัสผ่านที่ใช้งาน internet ทอท."  ng-model="loginData.password" ng-minlength='8' ng-maxlength='24' required>
         </label>
         <div class="error-container" ng-show="logInForm.password.$error" ng-messages="logInForm.$submitted && logInForm.password.$error">
@@ -30,7 +35,8 @@
         </div>
 
         <label class="item">
-          <button class="button button-block button-positive" ng-disabled='noInternet' type="submit">Log in</button>
+          <img src="img/SecureLogin.png" style='width:35%;'>
+          <button class="button button-block button-calm" ng-disabled='noInternet || !isRegistGCM' type="submit">เข้าสู่ระบบ</button>
         </label>
 
       </div>
@@ -51,11 +57,11 @@
       </div>
     </script> 
 
-    <div class='list card'>
+   <!--  <div class='list card'>
       <div class='item item-image'>
         <img src="img/ssl-icon.png">
       </div>
-    </div>
+    </div> -->
 
   </ion-content>
 </ion-modal-view>

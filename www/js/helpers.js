@@ -44,6 +44,18 @@ var _MS_PER_DAY = 1000 * 60 * 60 * 24;
     return today;
 };
 
+function GetDateSubtract (day) {
+  var today = new Date();
+  today.setDate(today.getDate() - day);
+  var dd = today.getDate();
+  var mm = today.getMonth()+1; //January is 0!
+  var yyyy = today.getFullYear();
+  if(dd<10) dd='0'+dd
+  if(mm<10) mm='0'+mm
+  today = dd+'/'+mm+'/'+yyyy;
+  return today;
+}
+
 function GetFiscalDate(previousYears){
 	var today = new Date();
 	var day = today.getDate();
@@ -481,6 +493,7 @@ function RedirectAndReloadView(url){
 
 function LogInAPI(AUTH_EVENTS,APIService,$http,$q,$cordovaNetwork,$ionicPopup){
   return $q(function(resolve,reject){
+    APIService.ShowLoading();
     //check is changed server
     CheckServerIsChanged($q,APIService.hostname()).then(function(response){
       if(response)
@@ -698,8 +711,21 @@ function CheckDeviceIsJailbreakOrRoot($q,$cordovaDevice) {
 function CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,latestVersion) {
   return $q(function(resolve){
     if(window.cordova){
+      // //split version to android and ios for compare by os
+      // var arrVersion = latestVersion.split(';');
+      // console.log(arrVersion);
+      // var androidVersion = arrVersion[0];
+      // var iosVersion = arrVersion[1];
       //check with current version of mobile
       GetAppVersion($q).then(function(version){
+        // console.log('deviceVersion',version);
+        // var deviceOS = GetOS($cordovaDevice);
+        // console.log('deviceOS',deviceOS.toLowerCase());
+        // var currentVersion;
+        // if(deviceOS.toLowerCase() == 'android') currentVersion = androidVersion;
+        // else currentVersion = iosVersion;
+        console.log('deviceVersion',version);
+        console.log('latestVersion',latestVersion);
         if(version != latestVersion){
            var confirmPopup = $ionicPopup.confirm({
              title: 'มี Version ใหม่',
@@ -1215,4 +1241,34 @@ function StatisticUserUsage() {
   console.log('track-authen-pin');
 };
   
+function InitialModalImage ($scope,$ionicModal) {
+  $scope.onWeb = onWeb;
+  $scope.modal = null;
 
+  $ionicModal.fromTemplateUrl('templates/image-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.openModal = function(index,isTimeWithImg) {
+    if(isTimeWithImg == null){
+      $scope.imageSrc = 'data:image/png;base64,' + $scope.signatureArr[index];  
+    }
+    else{
+     $scope.imageSrc = 'data:image/png;base64,' + $scope.timeWithArr[index];   
+    }
+    $scope.modal.show();
+  };
+
+  $scope.closeModal = function() {
+      $scope.modal.hide();
+  };
+
+}
+
+function GetOS ($cordovaDevice) {
+  var device = $cordovaDevice.getDevice();
+  return device.platform;
+}

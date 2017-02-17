@@ -28,11 +28,11 @@
 
           <div class='row' ng-if='$index % 2 == 0' ng-repeat='img in TimeWorkDetails.TimeWithImages track by $index'>
             <div class='col col-50' ng-if='($index) < TimeWorkDetails.TimeWithImages.length'>
-              <img class='full-image' ng-src="data:image/png;base64,{{TimeWorkDetails.TimeWithImages[$index].PHOTO}}" />    
+              <img class='full-image' ng-src="data:image/png;base64,{{TimeWorkDetails.TimeWithImages[$index].PHOTO}}" ng-click='openModal({{TimeWorkDetails.TimeWithImages[$index].index}},true)' />    
               <p>เวลา : {{TimeWorkDetails.TimeWithImages[$index].ACCESS_TIME}} น.</p>
             </div>
             <div class='col col-50' ng-if='($index + 1) < TimeWorkDetails.TimeWithImages.length'>
-              <img class='full-image' ng-src="data:image/png;base64,{{TimeWorkDetails.TimeWithImages[$index + 1].PHOTO}}" />
+              <img class='full-image' ng-src="data:image/png;base64,{{TimeWorkDetails.TimeWithImages[$index + 1].PHOTO}}" ng-click='openModal({{TimeWorkDetails.TimeWithImages[$index + 1].index}},true)' />
               <p>เวลา : {{TimeWorkDetails.TimeWithImages[$index + 1].ACCESS_TIME}} น.</p>
             </div>
           </div>
@@ -55,7 +55,7 @@
             <div class="item item-accordion" ng-show="isGroupShown(group)" ng-repeat="item in group.items">
 
               <div ng-show='item.SignatureObject && item.SignatureObject.length > 0' class='item-thumbnail-left item-text-wrap'>
-                <img ng-src='data:image/png;base64,{{item.SignatureObject}}' />
+                <img ng-src='data:image/png;base64,{{item.SignatureObject}}' ng-click='openModal({{item.index}})' />
                 <h2>{{item.RouteName}}</h2>
                 <p>{{item.RouteName}} , {{item.UpdateBy}} , {{item.UpdateDate}}</p> 
               </div>

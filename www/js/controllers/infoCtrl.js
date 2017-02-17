@@ -147,10 +147,12 @@ angular.module('starter')
 
     .controller('InfoCtrl', function($scope, $stateParams) {
     })
-    .controller('TimeCtrl', function($scope, $q, $filter, TimeAttendanceSQLite, SyncService, $ionicPlatform, APIService, $rootScope, $cordovaNetwork, $ionicPopup) {
+    .controller('TimeCtrl', function($scope, $q, $filter, TimeAttendanceSQLite, SyncService, $ionicPlatform, APIService, $rootScope, $cordovaNetwork, $ionicPopup, $ionicModal) {
         $ionicPlatform.ready(function(){
 
             APIService.ShowLoading();
+
+            InitialModalImage($scope,$ionicModal);
 
             //have internet connection
             if(CheckNetwork($cordovaNetwork)){
@@ -167,6 +169,7 @@ angular.module('starter')
             } 
 
             $scope.BindList = function(){
+                $scope.timeWithArr = [];
                 var selectedVal = $scope.ddlMonthsData.selectedOptions.val;
                 if(!selectedVal || selectedVal.length == 0) return APIService.HideLoading();
                 TimeAttendanceSQLite.GetDistinctStampDateByFromDateAndToDate(selectedVal).then(
@@ -177,14 +180,14 @@ angular.module('starter')
                                 var allDataArr = ConvertQueryResultToArray(allData);
                                 $scope.allTADatas = allDataArr;
                                 if(allDataArr != null && allDataArr.length > 0){
-                                    $scope.listTimeInfo = GetTimeInfo(allDataArr,$filter,$scope.allTADatas);
+                                    $scope.listTimeInfo = GetTimeInfo(allDataArr,$filter,$scope.allTADatas,$scope);
                                 }
                                 else $scope.listTimeInfo = [];
                             });
                         }
                         else{
                             if(distinctStampDateArr != null && distinctStampDateArr.length > 0){
-                                $scope.listTimeInfo = GetTimeInfo(distinctStampDateArr,$filter,$scope.allTADatas);
+                                $scope.listTimeInfo = GetTimeInfo(distinctStampDateArr,$filter,$scope.allTADatas,$scope);
                             }
                             else $scope.listTimeInfo = [];
                         }
@@ -1271,15 +1274,18 @@ function GetTimeDDLOptionsOnlyHaveData($filter,$q,sqliteService){
     });
 };
 
-function GetTimeInfo(distinctStampDate,$filter,allTADatas){
+function GetTimeInfo(distinctStampDate,$filter,allTADatas,$scope){
     var result = [];
+    var index = 0;
     for (var i = 0; i <= distinctStampDate.length - 1; i++) {
         var currentTAData = $filter('filter')(allTADatas,{stampdate:distinctStampDate[i].stampdate});
         var newData = {};
         newData.taDate = GetThaiDateByDate($filter,distinctStampDate[i].stampdate);
         newData.taDetails = [];
         for (var z = 0; z <= currentTAData.length - 1; z++) {
-            newData.taDetails.push({taStampTime:currentTAData[z].stamptimeonly,taLocation:currentTAData[z].Location,taImage:currentTAData[z].Image});
+            newData.taDetails.push({taStampTime:currentTAData[z].stamptimeonly,taLocation:currentTAData[z].Location,taImage:currentTAData[z].Image,index:index});
+            $scope.timeWithArr.push(currentTAData[z].Image);
+            index++;
         };
         result.push(newData);
     };
