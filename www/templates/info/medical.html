@@ -62,15 +62,25 @@
                     <div class='item item-body'>
                         <b>รวม {{sumTotal | number}} บาท</b>
                     </div>
+                    <div class="item item-divider" >
+                        <h2><b>รายละเอียด</b></h2>
+                    </div>
                 </div>
                 
-                <div ng-repeat="info in MedicalInfo | groupBy:'PaidDate' | toArray:true | orderBy:max ">
+               <!--  <div ng-repeat="info in MedicalInfo | groupBy:'PaidDate' | toArray:true | orderBy:max ">
                     <div class="item item-divider" >
                         <h2>วันที่ {{GetThaiDateByDate(info.$key)}}</h2>
                     </div>
                     <a href="#/app/information/medical-detail/{{item.Id}}" ng-repeat="item in info | orderBy:'-Id'" class="item" >
                         จำนวน {{item.Total | number}} บาท
                         <span class="item-note">{{item.bankName}}</span>
+                    </a>
+                </div> -->
+
+                <div ng-repeat='info in MedicalInfo'>
+                    <a class='item' href="#/app/information/medical-detail/{{info.Id}}">
+                        <h2>วันที่ใบเสร็จ {{GetThaiDateByDate(info.DocDate)}}</h2>
+                        <p>จำนวน {{info.Total | number}} บาท</p>
                     </a>
                 </div>
 

@@ -439,7 +439,7 @@ angular.module('starter')
                 var arr = [];
                 for (var i = 0; i <= data.length - 1; i++) {
                     arr.push({
-                        PaidDate:data[i].PaidDate,
+                        DocDate:data[i].DocDate,
                         Id:data[i].Id,
                         Total:data[i].Total,
                         OrderField:data[i].PaidDate.substring(4) + data[i].PaidDate.substring(2,4) + data[i].PaidDate.substring(0,2)
