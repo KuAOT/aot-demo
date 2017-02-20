@@ -94,7 +94,7 @@ angular.module('starter')
           $scope.menus = [];
           if(isAuthen){
             $scope.menus.push({link:'#/app/selfservice',text:'Self Services',icon:'ion-ios-person'});
-            $scope.menus.push({link:'#/app/information/finance',text:'ตรวจสอบข้อมูล',icon:'ion-information'});
+            $scope.menus.push({link:'#/app/information/hr',text:'ตรวจสอบข้อมูล',icon:'ion-information'});
             $scope.menus.push({link:'#/app/directory?pmroomid=0',text:'สมุดโทรศัพท์',icon:'ion-android-call'});
             if(!onWeb) $scope.menus.push({link:'#/app/qrcode',text:'QR-Code',icon:'ion-qr-scanner'});
             $scope.menus.push({link:'#/app/duty',text:'จัดการเวร',icon:'ion-ios-body-outline'});

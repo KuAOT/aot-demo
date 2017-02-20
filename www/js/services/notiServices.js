@@ -176,12 +176,8 @@ angular.module('starter')
     function ProcessNotification(data,$ionicPopup,$cordovaDevice){
 
       var alertType = (onWeb) ? data.alertType : data.additionalData.alertType;
-      var messageType 
-      if (onWeb) messageType = data.messageType
-      else{
-        if(GetOS($cordovaDevice) == 'Android') messageType = data.additionalData.messageType 
-        else messageType = JSON.parse(data.additionalData.messageType);
-      }
+      var messageType = (onWeb) ? data.messageType : data.additionalData.messageType 
+      var optData = (onWeb) ? data.optData : data.additionalData.optData;
       var menu = (onWeb) ? data.menu : data.additionalData.menu;
 
       //check if force logout from server
@@ -192,9 +188,9 @@ angular.module('starter')
         else return;
       }
       //check if messageType is hyperlink
-      if(messageType.type == "1"){
+      if(messageType == "1"){
         IonicConfirm($ionicPopup,'แจ้งเตือน',data.message,function(){
-          window.open(messageType.optData,'_system','location=no');
+          window.open(optData,'_system','location=no');
         });  
         // IonicConfirm($ionicPopup,'แจ้งเตือน','ต้องการเปิด link : ' + messageType.optData + ' ?',function(){
         //   window.open(messageType.optData,'_system','location=no');
