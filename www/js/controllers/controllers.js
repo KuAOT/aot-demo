@@ -1,16 +1,15 @@
 angular.module('starter')
 
-    .controller('LandingCtrl',function($scope, $ionicPlatform, $http, $q, APIService, $state, AUTH_EVENTS, NotiService, $cordovaNetwork, $ionicPopup, $cordovaFile, $ionicNavBarDelegate, $rootScope, $ionicHistory){
+    .controller('FirstPageCtrl',function($scope, $ionicPlatform, $rootScope, $timeout){
       
       $ionicPlatform.ready(function(){
-        // $ionicNavBarDelegate.showBackButton(true);
-        // RegisterBackButton($ionicPlatform,$rootScope,$ionicHistory);
-        APIService.HideLoading();
+        //show menu button
+        $rootScope.$broadcast('showMenuBtn');
       });
 
     })
 
-    .controller('AppCtrl', function($scope, $ionicModal, $timeout, $state, AuthService, $ionicPopup, $location, $ionicHistory, SQLiteService, NotiService, SyncService, $cordovaNetwork, APIService, $rootScope, $ionicPlatform, $q, $cordovaFile, $cordovaDevice, $filter, AUTH_EVENTS, $http, $ionicNavBarDelegate) {
+    .controller('AppCtrl', function($scope, $ionicModal, $timeout, $state, AuthService, $ionicPopup, $location, $ionicHistory, SQLiteService, NotiService, SyncService, $cordovaNetwork, APIService, $rootScope, $ionicPlatform, $q, $cordovaFile, $cordovaDevice, $filter, AUTH_EVENTS, $http, $ionicNavBarDelegate, $ionicSideMenuDelegate ) {
 
       // With the new view caching in Ionic, Controllers are only called
       // when they are recreated or on app start, instead of every page change.
@@ -20,6 +19,10 @@ angular.module('starter')
       //});
 
       $ionicPlatform.ready(function(){
+
+        //disable user to use menu
+        $scope.showMenuButton = false;
+        $ionicSideMenuDelegate.canDragContent(false);
 
         $scope.isRegistGCM = false;
 
@@ -46,7 +49,14 @@ angular.module('starter')
           $rootScope.$broadcast('checkAuthen', null);
           
           //bypass login if still loging in.
-          AuthService.bypassLogIn();
+          AuthService.bypassLogIn().then(function(response){
+            if(response != 'authen_pin') {
+              $ionicHistory.nextViewOptions({
+                disableBack: true
+              });
+              $state.go('app.firstpage');
+            } 
+          },function(){$scope.showMenuButton = true;$ionicSideMenuDelegate.canDragContent(true);});
         }
 
         APIService.ShowLoading();
@@ -72,7 +82,7 @@ angular.module('starter')
             });
           }
 
-        },function(error){console.log('LogInAPI-Error',error)});
+        },function(error){console.log('LogInAPI-Error',error);APIService.HideLoading();});
 
         $scope.onWeb = onWeb;
         $scope.noInternet = false;
@@ -88,6 +98,11 @@ angular.module('starter')
           $scope.userPosition = AuthService.position();
           //bind menus
           $scope.InitialMenus($scope.isAuthen,data);
+        });
+
+        $scope.$on('showMenuBtn',function(){
+          $scope.showMenuButton = true;
+          $ionicSideMenuDelegate.canDragContent(true);
         });
 
         $scope.InitialMenus = function(isAuthen,loginComplete){

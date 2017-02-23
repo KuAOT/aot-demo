@@ -137,16 +137,18 @@
             views:{
               "menuContent":{
                 templateUrl: 'templates/firstpage.html',
-                controller:'LandingCtrl'
+                controller: 'FirstPageCtrl'
               }
             }
           })
 
-          //initial page
-          .state('landing', {
-            url: '/landing',
-            templateUrl: 'templates/landing.html',
-            controller: 'LandingCtrl'
+          .state('app.landing', {
+            url: '/landingpage',
+            views:{
+              "menuContent":{
+                templateUrl: 'templates/landing.html'
+              }
+            }
           })
 
           .state('app.home.news-feed', {
@@ -279,7 +281,7 @@
           })
       // if none of the above states are matched, use this as the fallback
       //$urlRouterProvider.otherwise('/app/home/news-feed');
-      $urlRouterProvider.otherwise('/app/firstpage');
+      $urlRouterProvider.otherwise('/app/landingpage');
     })
 
     .directive("passwordVerify", function() {

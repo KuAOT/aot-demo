@@ -18,7 +18,7 @@
                     วันที่ {{info.taDate}}
                 </div>
                 <div ng-repeat='details in info.taDetails' class='item item-thumbnail-left'>
-                    <img ng-src="data:image/png;base64,{{details.taImage}}" ng-click='openModal({{details.index}},true)'>
+                    <img ng-show='details.taImage && details.taImage.length > 0' ng-src="data:image/png;base64,{{details.taImage}}" ng-click='openModal({{details.index}},true)'>
                     <h2>เวลา {{details.taStampTime}} น.</h2>
                     <p>{{details.taLocation}}</p>
                 </div>

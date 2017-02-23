@@ -1283,8 +1283,8 @@ function GetTimeInfo(distinctStampDate,$filter,allTADatas,$scope){
         newData.taDate = GetThaiDateByDate($filter,distinctStampDate[i].stampdate);
         newData.taDetails = [];
         for (var z = 0; z <= currentTAData.length - 1; z++) {
-            newData.taDetails.push({taStampTime:currentTAData[z].stamptimeonly,taLocation:currentTAData[z].Location,taImage:currentTAData[z].Image,index:index});
-            $scope.timeWithArr.push(currentTAData[z].Image);
+            newData.taDetails.push({taStampTime:currentTAData[z].stamptimeonly,taLocation:currentTAData[z].Location,taImage:(currentTAData[z].Image != null && currentTAData[z].Image.length > 0) ? currentTAData[z].Image : '',index:index});
+            if(currentTAData[z].Image != null && currentTAData[z].Image.length > 0) $scope.timeWithArr.push(currentTAData[z].Image);
             index++;
         };
         result.push(newData);

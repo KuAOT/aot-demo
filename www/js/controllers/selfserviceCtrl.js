@@ -498,7 +498,7 @@ angular.module('starter')
 		    		Device:value.Device,
 		    		SignatureObject:value.SignatureObject,
 		    		index:index
-		    	});	
+		    	});
 		    	$scope.signatureArr.push(value.SignatureObject);
 		    	index++;
 	      	});
@@ -1085,12 +1085,14 @@ angular.module('starter')
 			//declare signature array for stored base64str for image popup
 	    	$scope.timeWithArr = [];
 			var index = 0;
-			for (var i = 0; i <= data[0].Image.length - 1; i++) {
-				result.push({PHOTO:data[0].Image[i].PHOTO,ACCESS_TIME:GetTimeFromDatePointFormat(data[0].Image[i].ACCESS_TIME),index:index});
-				$scope.timeWithArr.push(data[0].Image[i].PHOTO);
-				index++;
-			};
-			$scope.TimeWorkDetails.TimeWithImages = result;
+			if(data[0].Image != null){
+				for (var i = 0; i <= data[0].Image.length - 1; i++) {
+					result.push({PHOTO:data[0].Image[i].PHOTO,ACCESS_TIME:GetTimeFromDatePointFormat(data[0].Image[i].ACCESS_TIME),index:index});
+					$scope.timeWithArr.push(data[0].Image[i].PHOTO);
+					index++;
+				};
+				$scope.TimeWorkDetails.TimeWithImages = result;	
+			}
 		};
 
 		$scope.InitialTimeWorkHistory = function(data){

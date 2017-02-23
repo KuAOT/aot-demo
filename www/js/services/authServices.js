@@ -192,23 +192,12 @@ angular.module('starter')
                                         returnURL = GetRedirectURL(menu).replace(/\//g,'$').replace(/\=/g,'|'); //if first run user have to authen pin first then redirect to specific url
                                     }
                                     ProcessAuthenPIN ($q,APIService,returnURL);
-                                    // //check pin is exist?
-                                    // CheckPINIsExist($q,APIService).then(function(response){
-                                    //     if(!response){
-                                    //             //redirect to set pin for the first time
-                                    //             IonicAlert($ionicPopup,'ต้องตั้งค่า PIN ก่อนใช้งาน',function(){
-                                    //             window.location = '#/app/helppinsetting?returnURL=' + returnURL + '&hideButton=true';
-                                    //         });
-                                    //     }
-                                    //     else{
-                                    //         //if(!onWeb) window.location = '#/app/helppinsetting?returnURL=firstpage&hideButton=true&onlyAuthen=true'; 
-                                    //         window.location = '#/app/helppinsetting?returnURL=' + returnURL + '&hideButton=true&onlyAuthen=true'; 
-                                    //     }
-                                    // })
+                                    resolve('authen_pin');
                                 }
+                                else resolve('no_pin');
                             },response.rows.item(0));
                         }
-                        resolve();
+                        else resolve('no_login')
                     },
                     function(error){console.log(error);reject(error);})    
             });

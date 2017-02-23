@@ -425,6 +425,8 @@ angular.module('starter')
               $ionicHistory.nextViewOptions({
                 disableBack: true
               });
+              //show menu button
+              $rootScope.$broadcast('showMenuBtn');
               //clear global variable notidata
               notiData = null;
               APIService.HideLoading();
