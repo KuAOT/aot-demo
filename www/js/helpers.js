@@ -29,6 +29,15 @@ var shortnessEngMonth = [
     {monthValue:'12',monthName:'Dec'},
 ];
 
+var thaiWeekDay = new Array(7);
+thaiWeekDay[0] = 'อาทิตย์';
+thaiWeekDay[1] = 'จันทร์';
+thaiWeekDay[2] = 'อังคาร';
+thaiWeekDay[3] = 'พุธ';
+thaiWeekDay[4] = 'พฤหัสบดี';
+thaiWeekDay[5] = 'ศุกร์';
+thaiWeekDay[6] = 'เสาร์';
+
 var emplooyeeDatas = []; //[{EC: "484074", NM: "สนธยา วิไลจิตต์"},{EC: "484134", NM: "ดนุพล ค่ายหนองสวง"},{EC: "484666", NM: "Peter Parker"}];
 
 var _MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -79,6 +88,17 @@ function  GetFiscalYear() {
 function GetThaiDateByDate($filter,inputDate){
   var currentMonth = $filter('filter')(shortnessThaiMonth, { monthValue: inputDate.substring(2,4) });
   return inputDate.substring(0,2) + ' ' + currentMonth[0].monthName + ' ' + (parseInt(inputDate.substring(4,8)) + 543);
+};
+
+function GetThaiDateWithWeekdayByDate ($filter,inputDate) {
+  var inputDay = parseInt(inputDate.substring(0,2));
+  var inputMonth = parseInt(inputDate.substring(2,4));
+  var inputYear = parseInt(inputDate.substring(4,8));
+
+  var date = new Date(inputYear,(inputMonth == 0) ? 0 : (inputMonth - 1),inputDay)
+  var weekday = thaiWeekDay[date.getDay()];
+  var currentMonth = $filter('filter')(shortnessThaiMonth, { monthValue: inputMonth });
+  return weekday + ' ที่ ' + inputDay + ' ' + currentMonth[0].monthName + ' ' + (inputYear + 543);
 };
 
 //05072016161000
@@ -1271,4 +1291,17 @@ function InitialModalImage ($scope,$ionicModal) {
 function GetOS ($cordovaDevice) {
   var device = $cordovaDevice.getDevice();
   return device.platform;
+}
+
+function CheckIsConnectAOTStaffWifi($ionicPopup,APIService) {
+  if(!onWeb){
+    WifiWizard.getCurrentSSID(function(response){
+      if(response != null & response.length > 0 && response.replace(/\"/g,'') == 'AOT_Staff'){
+        APIService.HideLoading();
+        IonicAlert($ionicPopup,'ไม่สามารถใช้งานผ่าน wifi ชื่อ AOT_Staff',function(){
+          APIService.HideLoading();
+        })
+      } 
+    }, function(fail){console.log(fail);});  
+  }
 }

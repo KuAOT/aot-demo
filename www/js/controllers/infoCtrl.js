@@ -1280,7 +1280,7 @@ function GetTimeInfo(distinctStampDate,$filter,allTADatas,$scope){
     for (var i = 0; i <= distinctStampDate.length - 1; i++) {
         var currentTAData = $filter('filter')(allTADatas,{stampdate:distinctStampDate[i].stampdate});
         var newData = {};
-        newData.taDate = GetThaiDateByDate($filter,distinctStampDate[i].stampdate);
+        newData.taDate = GetThaiDateWithWeekdayByDate($filter,distinctStampDate[i].stampdate);
         newData.taDetails = [];
         for (var z = 0; z <= currentTAData.length - 1; z++) {
             newData.taDetails.push({taStampTime:currentTAData[z].stamptimeonly,taLocation:currentTAData[z].Location,taImage:(currentTAData[z].Image != null && currentTAData[z].Image.length > 0) ? currentTAData[z].Image : '',index:index});
