@@ -98,7 +98,7 @@ function GetThaiDateWithWeekdayByDate ($filter,inputDate) {
   var date = new Date(inputYear,(inputMonth == 0) ? 0 : (inputMonth - 1),inputDay)
   var weekday = thaiWeekDay[date.getDay()];
   var currentMonth = $filter('filter')(shortnessThaiMonth, { monthValue: inputMonth });
-  return weekday + ' ที่ ' + inputDay + ' ' + currentMonth[0].monthName + ' ' + (inputYear + 543);
+  return weekday + 'ที่ ' + inputDay + ' ' + currentMonth[0].monthName + ' ' + (inputYear + 543);
 };
 
 //05072016161000
@@ -528,12 +528,12 @@ function LogInAPI(AUTH_EVENTS,APIService,$http,$q,$cordovaNetwork,$ionicPopup){
           console.log('have-token');
           SetAuthorizationHeader($http,window.localStorage.getItem('yourTokenKey'));
           //check token is expired
-          CheckTokenIsExpired(APIService,$q).then(function(response){
+          CheckTokenIsNotExpired(APIService,$q).then(function(response){
             if(response){
               resolve();
             }
             else{
-              PostGetToken($q,APIService,AUTH_EVENTS,$http).then(function(response){resolve(response);},function(error){reject(error);});    
+              PostGetToken($q,APIService,AUTH_EVENTS,$http).then(function(response){resolve(response);},function(error){reject(error);}); 
             }
           })
         } 
@@ -555,7 +555,7 @@ function CheckServerIsChanged ($q,currentServerName) {
   });
 };
 
-function CheckTokenIsExpired (APIService,$q) {
+function CheckTokenIsNotExpired (APIService,$q) {
   return $q(function(resolve){
     console.log('check-token');
     var url = APIService.hostname() + '/DeviceRegistered/CheckDeviceTokenIsValid';
@@ -564,11 +564,12 @@ function CheckTokenIsExpired (APIService,$q) {
         console.log('valid-token');
         resolve(true);
       },
-      function(error){console.log(error);
+      function(error){
+        console.log(error);
         if(error.status == 401) {
           console.log('token-expired-or-invalid');
-          resolve(false);
         }
+        resolve(false);
       });     
   });
 };
@@ -1220,7 +1221,7 @@ function GetRedirectURL (url) {
 }
 //**************************Notification**************************
 
-function ProcessAuthenPIN ($q,APIService,returnURL) {
+function ProcessAuthenPIN ($q,APIService,returnURL,$ionicPopup) {
   //statistic usage user(only on mobile device)
   if(!onWeb) StatisticUserUsage();
   //check pin is exist?
@@ -1239,14 +1240,14 @@ function ProcessAuthenPIN ($q,APIService,returnURL) {
 };
 
 var userTimeout;
-function StartUserTimeout ($q,APIService) {
-  if(userIsAuthen) userTimeout = setTimeout(function(){ ProcessAuthenPIN($q,APIService,'$firstpage') }, 86399999);
+function StartUserTimeout ($q,APIService,$ionicPopup) {
+  if(userIsAuthen) userTimeout = setTimeout(function(){ ProcessAuthenPIN($q,APIService,'$firstpage',$ionicPopup) }, 86399999);
 }
 
-function ResetUserTimeout ($q,APIService) {
+function ResetUserTimeout ($q,APIService,$ionicPopup) {
   if(userIsAuthen){
     ClearUserTimeout();
-    StartUserTimeout($q,APIService);  
+    StartUserTimeout($q,APIService,$ionicPopup);  
   }
 }
 
@@ -1261,8 +1262,12 @@ function StatisticUserUsage() {
   console.log('track-authen-pin');
 };
   
-function InitialModalImage ($scope,$ionicModal) {
+function InitialModalImage ($scope,$ionicModal,$cordovaDevice) {
   $scope.onWeb = onWeb;
+  $scope.isIOS = false;
+  if(!onWeb){
+    if(GetOS($cordovaDevice) == 'iOS') $scope.isIOS = true;
+  }
   $scope.modal = null;
 
   $ionicModal.fromTemplateUrl('templates/image-modal.html', {
@@ -1293,15 +1298,19 @@ function GetOS ($cordovaDevice) {
   return device.platform;
 }
 
-function CheckIsConnectAOTStaffWifi($ionicPopup,APIService) {
-  if(!onWeb){
-    WifiWizard.getCurrentSSID(function(response){
-      if(response != null & response.length > 0 && response.replace(/\"/g,'') == 'AOT_Staff'){
-        APIService.HideLoading();
-        IonicAlert($ionicPopup,'ไม่สามารถใช้งานผ่าน wifi ชื่อ AOT_Staff',function(){
+function CheckIsConnectAOTStaffWifi($ionicPopup,APIService,$q) {
+  return $q(function(resolve){
+      if(!onWeb){
+      WifiWizard.getCurrentSSID(function(response){
+        if(response != null & response.length > 0 && response.replace(/\"/g,'') == 'AOT_Staff'){
           APIService.HideLoading();
-        })
-      } 
-    }, function(fail){console.log(fail);});  
-  }
+          IonicAlert($ionicPopup,'ไม่สามารถใช้งานผ่าน wifi ชื่อ AOT_Staff',function(){
+            APIService.HideLoading();
+          })
+          resolve(true);
+        } 
+      }, function(fail){console.log(fail);resolve(false);});  
+    }
+    else resolve(false);
+  });
 }

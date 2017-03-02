@@ -23,6 +23,7 @@ angular.module('starter')
         //disable user to use menu
         $scope.showMenuButton = false;
         $ionicSideMenuDelegate.canDragContent(false);
+        $scope.showBtnReconnect = false;
 
         $scope.isRegistGCM = false;
 
@@ -59,30 +60,42 @@ angular.module('starter')
           },function(){$scope.showMenuButton = true;$ionicSideMenuDelegate.canDragContent(true);});
         }
 
-        APIService.ShowLoading();
-        //Login api
-        LogInAPI(AUTH_EVENTS,APIService,$http,$q,$cordovaNetwork, $ionicPopup).then(function(){
+        $scope.processLogInAPI = function()
+        {
+          //check wifi name
+          CheckIsConnectAOTStaffWifi($ionicPopup,APIService,$q).then(function(response){
+            if(response) $scope.showBtnReconnect = true;
+            else $scope.showBtnReconnect = false;
+          });
 
-          APIService.HideLoading();
+          APIService.ShowLoading();
+          //Login api
+          LogInAPI(AUTH_EVENTS,APIService,$http,$q,$cordovaNetwork, $ionicPopup).then(function(){
 
-          //post to gcm(google cloud messaging) for register device and get token from gcm
-          if (window.cordova){
-            NotiService.Register().then(function(){
-              $scope.isRegistGCM = true;
-              $scope.processAfterLogInAPI();
-              CheckForceLogOut($ionicPopup,APIService,AuthService,$q,$cordovaFile,$cordovaDevice);
-            });
-          }
-          //else window.localStorage.setItem('GCMToken',PCGCMToken);
-          else{
-            //register gcm for desktop
-            NotiService.DesktopRegister().then(function(){
-              $scope.isRegistGCM = true;
-              $scope.processAfterLogInAPI();
-            });
-          }
+            APIService.HideLoading();
+            $scope.showBtnReconnect = false;
 
-        },function(error){console.log('LogInAPI-Error',error);APIService.HideLoading();});
+            //post to gcm(google cloud messaging) for register device and get token from gcm
+            if (window.cordova){
+              NotiService.Register().then(function(){
+                $scope.isRegistGCM = true;
+                $scope.processAfterLogInAPI();
+                CheckForceLogOut($ionicPopup,APIService,AuthService,$q,$cordovaFile,$cordovaDevice);
+              });
+            }
+            //else window.localStorage.setItem('GCMToken',PCGCMToken);
+            else{
+              //register gcm for desktop
+              NotiService.DesktopRegister().then(function(){
+                $scope.isRegistGCM = true;
+                $scope.processAfterLogInAPI();
+              });
+            }
+
+          },function(error){console.log('LogInAPI-Error',error);APIService.HideLoading();$scope.showBtnReconnect = true;});
+        }
+
+        $scope.processLogInAPI();
 
         $scope.onWeb = onWeb;
         $scope.noInternet = false;
@@ -112,7 +125,7 @@ angular.module('starter')
             $scope.menus.push({link:'#/app/information/hr',text:'ตรวจสอบข้อมูล',icon:'ion-information'});
             $scope.menus.push({link:'#/app/directory?pmroomid=0',text:'สมุดโทรศัพท์',icon:'ion-android-call'});
             if(!onWeb) $scope.menus.push({link:'#/app/qrcode',text:'QR-Code',icon:'ion-qr-scanner'});
-            $scope.menus.push({link:'#/app/duty',text:'จัดการเวร',icon:'ion-ios-body-outline'});
+            // $scope.menus.push({link:'#/app/duty',text:'จัดการเวร',icon:'ion-ios-body-outline'});
             $scope.menus.push({link:'#/app/notihistory',text:'ประวัติแจ้งเตือน',icon:'ion-android-refresh'});
             if(loginComplete == null){
               //post to get MenuNotSeen to remove it.
@@ -666,13 +679,15 @@ function InitialCirculars(allData,start,retrieve){
     var currentIndex = start - 1;
     if(allData != null){
       while (counter <= retrieve){
-        var item = {Id:allData[currentIndex].Id,
-                    DocDate:allData[currentIndex].DocDate,
-                    Description:allData[currentIndex].Description,
-                    DocNumber:allData[currentIndex].DocNumber,
-                    OrderField:allData[currentIndex].DocDate.substring(4) + allData[currentIndex].DocDate.substring(2,4) + allData[currentIndex].DocDate.substring(0,2)
-                  };
-        result.push(item);
+        if(allData[currentIndex] != null){
+          var item = {Id:allData[currentIndex].Id,
+                      DocDate:allData[currentIndex].DocDate,
+                      Description:allData[currentIndex].Description,
+                      DocNumber:allData[currentIndex].DocNumber,
+                      OrderField:allData[currentIndex].DocDate.substring(4) + allData[currentIndex].DocDate.substring(2,4) + allData[currentIndex].DocDate.substring(0,2)
+                    };
+          result.push(item);  
+        }
         counter++;
         currentIndex++;
       }  
@@ -725,7 +740,7 @@ function InitialCircularProcess($scope, $filter, SyncService, CircularSQLite, AP
         $scope.Circulars = InitialCirculars($scope.allData,$scope.start,$scope.retrieve);
       }
       $scope.haveMoreData = (($scope.start + $scope.retrieve) < $scope.allData.length) ? true : false;
-      APIService.HideLoading();
+      FinalCtrlAction($scope,APIService); 
     });
   });
 

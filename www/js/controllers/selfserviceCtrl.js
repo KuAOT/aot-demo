@@ -433,11 +433,11 @@ angular.module('starter')
 })
 
 
-.controller('ItemRedeemDutyCtrl',function($scope,$ionicPopup,$cordovaNetwork,$stateParams,WorkFlowService,$ionicPlatform,$location,$filter,$rootScope,$ionicModal){
+.controller('ItemRedeemDutyCtrl',function($scope,$ionicPopup,$cordovaNetwork,$stateParams,WorkFlowService,$ionicPlatform,$location,$filter,$rootScope,$ionicModal,$cordovaDevice){
 
 	$ionicPlatform.ready(function(){
 
-		InitialModalImage($scope,$ionicModal);
+		InitialModalImage($scope,$ionicModal,$cordovaDevice);
 
 		//actiontype : 2 = approve , 5 = reject , 3 = acknowledge
 		$scope.popUpDetails = {title:'',subtitle:'',actiontype:0};
@@ -789,10 +789,10 @@ angular.module('starter')
 	});
 })
 
-.controller('ItemLeaveCtrl',function($scope,$cordovaNetwork,$stateParams,$ionicPopup,$ionicPlatform,WorkFlowService,$filter,$ionicModal){
+.controller('ItemLeaveCtrl',function($scope,$cordovaNetwork,$stateParams,$ionicPopup,$ionicPlatform,WorkFlowService,$filter,$ionicModal,$cordovaDevice){
 	$ionicPlatform.ready(function(){
 
-		InitialModalImage($scope,$ionicModal);
+		InitialModalImage($scope,$ionicModal,$cordovaDevice);
 
 		$scope.LeaveDetails = {};
 		$scope.LeaveHistories = [];
@@ -1017,10 +1017,10 @@ angular.module('starter')
 
 })
 
-.controller('ItemTimeWorkCtrl',function($scope,$cordovaNetwork,$stateParams,$ionicPopup,$ionicPlatform,WorkFlowService,$filter,$ionicModal){
+.controller('ItemTimeWorkCtrl',function($scope,$cordovaNetwork,$stateParams,$ionicPopup,$ionicPlatform,WorkFlowService,$filter,$ionicModal,$cordovaDevice){
 	$ionicPlatform.ready(function(){
 
-		InitialModalImage($scope,$ionicModal);
+		InitialModalImage($scope,$ionicModal,$cordovaDevice);
 
 		$scope.TimeWorkDetails = {};
 		$scope.TimeWorkHistories = [];
@@ -1129,10 +1129,10 @@ angular.module('starter')
 
 	});
 })
-.controller('ItemOtherSystemCtrl',function($scope,$cordovaNetwork,$stateParams,$ionicPopup,$ionicPlatform,WorkFlowService,$filter,$q,$cordovaFile,$cordovaFileOpener2,APIService,$ionicModal){
+.controller('ItemOtherSystemCtrl',function($scope,$cordovaNetwork,$stateParams,$ionicPopup,$ionicPlatform,WorkFlowService,$filter,$q,$cordovaFile,$cordovaFileOpener2,APIService,$ionicModal,$cordovaDevice){
 	$ionicPlatform.ready(function(){
 
-		InitialModalImage($scope,$ionicModal);
+		InitialModalImage($scope,$ionicModal,$cordovaDevice);
 
 		$scope.RequestDetails = {};
 		$scope.RequestHistories = [];

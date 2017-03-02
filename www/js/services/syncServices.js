@@ -53,7 +53,7 @@ angular.module('starter')
   this.SyncTimeReport = function(){
     var myEmpId = window.localStorage.getItem("CurrentUserName");
     var apiDatas = {
-      GetData:{ObjectID:12,SyncTAReportViewModel:{EmpID: myEmpId, FromDate: GetFiscalDate(1), ToDate: GetDateSubtract(30).replace(/\//g,'')}},
+      GetData:{ObjectID:12,SyncTAReportViewModel:{EmpID: myEmpId, FromDate: GetDateSubtract(90).replace(/\//g,''), ToDate: GetCurrentDate().replace(/\//g,'')}},
       AddData:{ObjectID:12,ObjectTAReportEntity:{}},
       UpdateData:{ObjectID:12,ObjectTAReportEntity:{}},
     };
@@ -96,7 +96,7 @@ angular.module('starter')
 
   this.SyncCircular = function(){
     var apiDatas = {
-      GetData:{ObjectID:3,SyncCircularLetterViewModel:{DocDate:''}},
+      GetData:{ObjectID:3,SyncCircularLetterViewModel:{DocDate:GetDateSubtract(45).replace(/\//g,'')}},
       AddData:{ObjectID:3,ObjectCircularLetterEntity:{}},
       UpdateData:{ObjectID:3,ObjectCircularLetterEntity:{}}
     };
@@ -106,7 +106,7 @@ angular.module('starter')
 
   this.SyncNews = function(){
     var apiDatas = {
-      GetData:{ObjectID:8,SyncNewsViewModel:{PubDate:''}},
+      GetData:{ObjectID:8,SyncNewsViewModel:{PubDate:GetDateSubtract(45).replace(/\//g,'')}},
       AddData:{ObjectID:8,ObjectNewsEntity:{}},
       UpdateData:{ObjectID:8,ObjectNewsEntity:{}}
     };

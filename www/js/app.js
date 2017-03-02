@@ -28,9 +28,6 @@
     .run(function($cordovaFile,$cordovaFileOpener2,$ionicPlatform, SQLiteService, AuthService, XMPPService, XMPPApiService, $rootScope, AUTH_EVENTS, APIService, $http, $q, $cordovaNetwork, $ionicPopup,$state, NotiService, $cordovaDevice, $ionicNavBarDelegate, $ionicHistory){
       $ionicPlatform.ready(function(){
 
-        //check wifi name
-        CheckIsConnectAOTStaffWifi($ionicPopup,APIService);
-
         // start tracker(only on mobile device)
         if(!onWeb) window.ga.startTrackerWithId('UA-91230514-1');
 
@@ -48,8 +45,8 @@
         //ionic resume event
         $ionicPlatform.on('resume', function(){
           //check wifi name
-          CheckIsConnectAOTStaffWifi($ionicPopup,APIService);
-          isFirstRun = false;
+          CheckIsConnectAOTStaffWifi($ionicPopup,APIService,$q);
+          //isFirstRun = false;
           CheckForceLogOut($ionicPopup,APIService,AuthService,$q,$cordovaFile,$cordovaDevice);
         });
 
@@ -102,12 +99,11 @@
     .run(function($rootScope, $ionicPlatform, $ionicHistory){
       RegisterBackButton($ionicPlatform,$rootScope,$ionicHistory);
     })
-    .run(function($rootScope,$q,APIService){
+    .run(function($rootScope,$q,APIService,$ionicPopup){
       //start timeout if user didn't change view then go to authen pin view
-      //StartUserTimeout($q,APIService);
       $rootScope.$on("$locationChangeStart", function(event, next, current) { 
         //reset timeout
-        ResetUserTimeout($q,APIService);
+        ResetUserTimeout($q,APIService,$ionicPopup);
       });
     })
 

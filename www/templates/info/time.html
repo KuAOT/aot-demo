@@ -15,7 +15,7 @@
         <div class="list padding-top">
             <div ng-repeat='info in listTimeInfo'>
                 <div class="item item-divider">
-                    วัน {{info.taDate}}
+                    วัน{{info.taDate}}
                 </div>
                 <div ng-repeat='details in info.taDetails' class='item item-thumbnail-left'>
                     <img ng-show='details.taImage && details.taImage.length > 0' ng-src="data:image/png;base64,{{details.taImage}}" ng-click='openModal({{details.index}},true)'>

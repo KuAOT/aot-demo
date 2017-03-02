@@ -38,6 +38,12 @@
 
         </ion-list>
 
+        <div class='card' ng-if='Circulars.length <= 0'>
+            <div class='item item-text-wrap'>
+                ไม่พบข้อมูล
+            </div>
+        </div>
+
         <ion-infinite-scroll on-infinite="loadMoreData()" ng-if="haveMoreData" distanct="1%">
         </ion-infinite-scroll>
 

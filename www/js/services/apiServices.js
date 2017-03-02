@@ -13,7 +13,10 @@ angular.module('starter').service('APIService',function($http,$httpParamSerializ
         	success(response);
         },
         function(response){
-            if(isTimeOut) response = {status:599,data:'ไม่ได้รับข้อมูลจาก server นานเกินไป / โปรดลองอีกครั้ง'};
+            if(isTimeOut){
+                response = {status:599,data:'ไม่ได้รับข้อมูลจาก server นานเกินไป / โปรดลองอีกครั้ง'};
+                service.HideLoading();
+            } 
             ShowErrorByStatus(response,$ionicPopup);
         	error(response);
         });
@@ -22,6 +25,7 @@ angular.module('starter').service('APIService',function($http,$httpParamSerializ
             isTimeOut = true;
             deferred.resolve(); // this aborts the request!
         }, 60000);
+    
 	};
 
     this.httpGet = function(url,param,success,error){

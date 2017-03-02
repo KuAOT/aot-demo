@@ -108,7 +108,7 @@ angular.module('starter')
 		$cordovaSQLite.execute(db,"CREATE TABLE IF NOT EXISTS timeattendance(clientid integer primary key AUTOINCREMENT, Id int, SequenceID text, EmpID text, StampTime datetime, MachineID text, StampResult boolean, Location text, Airport text, stampdate text, stamptimeonly text, Image text, DL boolean,dirty boolean,TS text)");
 	};
 	this.CreateTimeReportTable = function(){
-		$cordovaSQLite.execute(db,"CREATE TABLE IF NOT EXISTS timereport(clientid integer primary key AUTOINCREMENT, Id int, WORKDATE text, STARTTIME text, OFFTIME text, NOTE text, OUT_EARLY text, OUT_LATE text, TIMECATEGORY text, DL boolean,dirty boolean,TS text)");
+		$cordovaSQLite.execute(db,"CREATE TABLE IF NOT EXISTS timereport(clientid integer primary key AUTOINCREMENT, Id int, WORKDATE text, STARTTIME text, OFFTIME text, NOTE text, OUT_EARLY text, OUT_LATE text, TIMECATEGORY text,REMARK text, DL boolean,dirty boolean,TS text)");
 	};
 	this.CreateLeaveTable = function(){
 		$cordovaSQLite.execute(db,"CREATE TABLE IF NOT EXISTS leave(clientid integer primary key AUTOINCREMENT, Id int, Empl_Code text, Empl_Name text, Leave_Code text, Leave_Day text, Leave_From text, Leave_To text, Leave_Date text, Updt_Date text, Tran_Seqe text, Leave_Timecode text, DL boolean,dirty boolean,TS text)");
@@ -1248,19 +1248,19 @@ angular.module('starter')
 	this.Update = function(data,isDirty,clientUpdate){
 		var sql;
 		if(clientUpdate)
-			sql = "UPDATE timereport SET Id = ?, WORKDATE = ?, STARTTIME = ?, OFFTIME = ?, NOTE = ?, OUT_EARLY = ?, OUT_LATE = ?, TIMECATEGORY = ?, DL = ?, dirty = ?, TS = ? WHERE clientid = " + data.clientid;
+			sql = "UPDATE timereport SET Id = ?, WORKDATE = ?, STARTTIME = ?, OFFTIME = ?, NOTE = ?, OUT_EARLY = ?, OUT_LATE = ?, TIMECATEGORY = ?,REMARK = ?, DL = ?, dirty = ?, TS = ? WHERE clientid = " + data.clientid;
 		else
-			sql = "UPDATE timereport SET Id = ?, WORKDATE = ?, STARTTIME = ?, OFFTIME = ?, NOTE = ?, OUT_EARLY = ?, OUT_LATE = ?, TIMECATEGORY = ?, DL = ?, dirty = ?, TS = ? WHERE Id = " + data.Id;
-		var param = [data.Id,data.WORKDATE,data.STARTTIME,data.OFFTIME,data.NOTE,data.OUT_EARLY,data.OUT_LATE,data.TIMECATEGORY,data.DL,isDirty,data.TS];
+			sql = "UPDATE timereport SET Id = ?, WORKDATE = ?, STARTTIME = ?, OFFTIME = ?, NOTE = ?, OUT_EARLY = ?, OUT_LATE = ?, TIMECATEGORY = ?,REMARK = ?, DL = ?, dirty = ?, TS = ? WHERE Id = " + data.Id;
+		var param = [data.Id,data.WORKDATE,data.STARTTIME,data.OFFTIME,data.NOTE,data.OUT_EARLY,data.OUT_LATE,data.TIMECATEGORY,data.REMARK,data.DL,isDirty,data.TS];
 		return SQLiteService.Execute(sql,param).then(function(response){return response;},function(error){return error;});	
 	};
 
 	this.Add = function(data,createFromClient){
-		var sql = "INSERT INTO timereport (Id, WORKDATE, STARTTIME, OFFTIME, NOTE, OUT_EARLY, OUT_LATE, TIMECATEGORY, DL, dirty, TS) VALUES ";
+		var sql = "INSERT INTO timereport (Id, WORKDATE, STARTTIME, OFFTIME, NOTE, OUT_EARLY, OUT_LATE, TIMECATEGORY, REMARK, DL, dirty, TS) VALUES ";
 		var param = []; 
 		var rowArgs = [];
 		data.forEach(function(item){
-			rowArgs.push("(?,?,?,?,?,?,?,?,?,?,?)");
+			rowArgs.push("(?,?,?,?,?,?,?,?,?,?,?,?)");
 			param.push(item.Id);
 			param.push(item.WORKDATE);
 			param.push(item.STARTTIME);
@@ -1269,6 +1269,7 @@ angular.module('starter')
 			param.push(item.OUT_EARLY);
 			param.push(item.OUT_LATE);
 			param.push(item.TIMECATEGORY);
+			param.push(item.REMARK);
 			param.push(item.DL);
 			//dirty
 			if(createFromClient) param.push(true);

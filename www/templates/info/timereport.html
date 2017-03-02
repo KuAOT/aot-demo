@@ -15,14 +15,14 @@
 
         <div class="list" ng-repeat='item in timeReports'>
             <div class='item item-text-wrap'> 
-                <p><b>วันที่ : </b>{{item.WORKDATE}}</p>
+                <p><b>วัน : </b>{{item.WORKDATE}}</p>
                 <p><b>เวลาเข้า : </b>{{item.STARTTIME}} - {{item.OFFTIME}}</p>
                 <!-- <p><b>เครื่องลงเวลาเข้า : </b>{{item.LocIn}}</p> -->
                 <!-- <p><b>เวลาออกงาน : </b>{{item.OFFTIME}}</p> -->
                 <!-- <p><b>เครื่องลงเวลาออก : </b>{{item.LocOut}}</p> -->
-                <p ng-if='(!item.OUT_EARLY && item.OUT_EARLY.length == 0) && (!item.OUT_LATE && item.OUT_LATE.length == 0)'><b>สถานะ : </b>{{item.NOTE}}</p>
-                <p ng-if='item.OUT_EARLY && item.OUT_EARLY.length > 0'><b>สถานะ : </b>{{item.NOTE}} (ออกก่อนเวลา)</p>
-                <p ng-if='item.OUT_LATE && item.OUT_LATE.length > 0'><b>สถานะ : </b>{{item.NOTE}} (ออกหลังเวลา)</p>
+                <p ng-if='(!item.OUT_EARLY && item.OUT_EARLY.length == 0) && (!item.OUT_LATE && item.OUT_LATE.length == 0)'><b>สถานะ : </b>{{item.NOTE}} {{item.REMARK}}</p>
+                <p ng-if='item.OUT_EARLY && item.OUT_EARLY.length > 0'><b>สถานะ : </b>{{item.NOTE}} (ออกก่อนเวลา) {{item.REMARK}}</p>
+                <p ng-if='item.OUT_LATE && item.OUT_LATE.length > 0'><b>สถานะ : </b>{{item.NOTE}} (ออกหลังเวลา) {{item.REMARK}}</p>
                 <!-- <p><b>ออกก่อนเวลา : </b>{{item.OUT_EARLY}}</p>
                 <p><b>ออกหลังเวลา : </b>{{item.OUT_LATE}}</p> -->
                 <!-- <p><b>ประเภทการทำงาน : </b>{{item.TIMECATEGORY}}</p> -->

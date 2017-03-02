@@ -7,6 +7,9 @@
     top:50%;
     transform:translateY(-50%);
 }
+.extend-ios{
+  margin-top:50%;
+}
 </style>
 
 <ion-modal-view>
@@ -21,7 +24,8 @@
     </ion-header-bar>
 
     <div ng-if='!onWeb'>
-      <img ng-src="{{imageSrc}}" class='full-image img-center'/>  
+      <img ng-src="{{imageSrc}}" ng-if='!isIOS' class='full-image img-center'/>  
+      <img ng-src="{{imageSrc}}" ng-if='isIOS' class='full-image img-center extend-ios'/>  
     </div>
   
     <div ng-if='onWeb' class='row'>

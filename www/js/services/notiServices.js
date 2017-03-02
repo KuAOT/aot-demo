@@ -187,41 +187,27 @@ angular.module('starter')
         }
         else return;
       }
-      //check if messageType is hyperlink
-      if(messageType == "1"){
-        IonicConfirm($ionicPopup,'แจ้งเตือน',data.message,function(){
-          window.open(optData,'_system','location=no');
-        });  
-        // IonicConfirm($ionicPopup,'แจ้งเตือน','ต้องการเปิด link : ' + messageType.optData + ' ?',function(){
-        //   window.open(messageType.optData,'_system','location=no');
-        // });  
-      }
       else{
-        //check if need to confirm and redirect to specific path
-        if(alertType == "1"){
-          IonicConfirm($ionicPopup,'แจ้งเตือน','ต้องการดูข้อมูล : ' + data.title + ' ?',function(){
-            // if(isFirstRun){
-            //   notiURL = GetRedirectURL(menu).replace(/\//g,'$').replace(/\=/g,'|'); //if first run user have to authen pin first in bypasslogin then redirect to specific url
-            //   CheckPINIsExist($q,APIService).then(function(response){
-            //     if(!response){
-            //       //redirect to set pin for the first time
-            //       IonicAlert($ionicPopup,'ต้องตั้งค่า PIN ก่อนใช้งาน',function(){
-            //         window.location = '#/app/helppinsetting?returnURL=' + notiURL + '&hideButton=true';
-            //       });
-            //     }
-            //     else{
-            //       window.location = '#/app/helppinsetting?returnURL=' + notiURL + '&hideButton=true&onlyAuthen=true';
-            //     }
-            //   })
-            // } 
-            // else ProcessRedirect(menu);
-            
-            //if not first run then redirect without PIN authentication
-            if(!isFirstRun) ProcessRedirect(menu);
-          });
+        //check if messageType is hyperlink
+        if(messageType == "1"){
+          IonicConfirm($ionicPopup,'แจ้งเตือน',data.message,function(){
+            window.open(optData,'_system','location=no');
+          });  
+          // IonicConfirm($ionicPopup,'แจ้งเตือน','ต้องการเปิด link : ' + messageType.optData + ' ?',function(){
+          //   window.open(messageType.optData,'_system','location=no');
+          // });  
         }
-        //just show message
-        else IonicAlert($ionicPopup,data.message,null);
+        else{
+          //check if need to confirm and redirect to specific path
+          if(alertType == "1"){
+            IonicConfirm($ionicPopup,'แจ้งเตือน','ต้องการดูข้อมูล : ' + data.title + ' ?',function(){
+              //if not first run then redirect without PIN authentication
+              if(!isFirstRun) ProcessRedirect(menu);
+            });
+          }
+          //just show message
+          else IonicAlert($ionicPopup,data.message,null);
+        }
       }
     };
 
