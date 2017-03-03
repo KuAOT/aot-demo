@@ -244,6 +244,7 @@ angular.module('starter')
                             $ionicHistory.clearHistory();
                         },300);
                         $rootScope.$broadcast('checkAuthen', null);
+                        if(isForceLogOut) OpenIonicAlertPopup($ionicPopup,'Logged out','Logged out');
                         resolve(true);
                       });
                     },
