@@ -747,6 +747,9 @@ function CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,lates
         // else currentVersion = iosVersion;
         console.log('deviceVersion',version);
         console.log('latestVersion',latestVersion);
+        var deviceInfo = $cordovaDevice.getDevice();
+        //don't show update button in iOS device(can't approved Itune Connect review)
+        if(deviceInfo.platform == 'iOS') return resolve(true);
         if(version != latestVersion){
            var confirmPopup = $ionicPopup.confirm({
              title: 'มี Version ใหม่',
@@ -759,7 +762,6 @@ function CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,lates
                 onTap:function(){
                   // //update version (get url from api and redirect to each store)
                   var key;
-                  var deviceInfo = $cordovaDevice.getDevice();
                   if(deviceInfo.platform == 'Android') key = 'PlayStoreURL';
                   else key = 'AppStoreURL';
                   GetApplicationStoreURL($q,APIService,key).then(function(url){
@@ -1313,4 +1315,9 @@ function CheckIsConnectAOTStaffWifi($ionicPopup,APIService,$q) {
     }
     else resolve(false);
   });
+}
+
+function CheckIsNumber(data){
+  var isnum = /^\d+$/.test(data);
+  return isnum;
 }
