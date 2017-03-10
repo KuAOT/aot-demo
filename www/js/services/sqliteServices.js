@@ -223,6 +223,12 @@ angular.module('starter')
 			function(error){console.log(error);})
 	};
 
+	this.UpdateUserProfile = function(key,value){
+		var sql = "UPDATE medical SET " + key + " = ?";
+		var param = [value];
+		return SQLiteService.Execute(sql,param).then(function(response){return response;},function(error){return error;});	
+	};
+
 	this.GetLatestTS = function(){
 		return SQLiteService.BaseGetLatestTS('userprofile',false).then(function(response){return response;},function(error){return error;});
 	};

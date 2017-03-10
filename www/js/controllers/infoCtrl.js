@@ -289,8 +289,11 @@ angular.module('starter')
                 if(data != null && data.length > 0){
                     //if current fiscal year have data
                     $scope.leaveSummaryGroups = [];
+                    $scope.leaveSummaryNotUsed = [];
                     angular.forEach(data,function(value,key){
-                        $scope.leaveSummaryGroups.push({LeaveCode:value.LeaveCode,name:value.LeaveName,Details:'(ใช้ไป ' + value.Used + ' วัน,คงเหลือ ' + value.Left + ' วัน)',Bring:value.Bring,YearRight:value.YearRight,SumRight:value.SumRight,Used:value.Used,Left:value.Left});
+                        //if used = 0 then go to the next round
+                        if(value.Used != 0) $scope.leaveSummaryGroups.push({LeaveCode:value.LeaveCode,name:value.LeaveName,Details:'(ใช้ไป ' + value.Used + ' วัน,คงเหลือ ' + value.Left + ' วัน)',Bring:value.Bring,YearRight:value.YearRight,SumRight:value.SumRight,Used:value.Used,Left:value.Left});
+                        else $scope.leaveSummaryNotUsed.push({LeaveCode:value.LeaveCode,name:value.LeaveName,Details:'(ใช้ไป ' + value.Used + ' วัน,คงเหลือ ' + value.Left + ' วัน)',Bring:value.Bring,YearRight:value.YearRight,SumRight:value.SumRight,Used:value.Used,Left:value.Left});
                     });
                 }
                 else{
@@ -299,8 +302,10 @@ angular.module('starter')
                     LeaveSummarySQLite.GetLeaveSummaryInfos($scope.FiscalYear).then(function(response){
                         var data = ConvertQueryResultToArray(response);
                         $scope.leaveSummaryGroups = [];
+                        $scope.leaveSummaryNotUsed = [];
                         angular.forEach(data,function(value,key){
-                            $scope.leaveSummaryGroups.push({LeaveCode:value.LeaveCode,name:value.LeaveName + ' (' + value.Used + ' วัน)',Bring:value.Bring,YearRight:value.YearRight,SumRight:value.SumRight,Used:value.Used,Left:value.Left});
+                            if(value.Used != 0) $scope.leaveSummaryGroups.push({LeaveCode:value.LeaveCode,name:value.LeaveName,Details:'(ใช้ไป ' + value.Used + ' วัน,คงเหลือ ' + value.Left + ' วัน)',Bring:value.Bring,YearRight:value.YearRight,SumRight:value.SumRight,Used:value.Used,Left:value.Left});
+                            else $scope.leaveSummaryNotUsed.push({LeaveCode:value.LeaveCode,name:value.LeaveName,Details:'(ใช้ไป ' + value.Used + ' วัน,คงเหลือ ' + value.Left + ' วัน)',Bring:value.Bring,YearRight:value.YearRight,SumRight:value.SumRight,Used:value.Used,Left:value.Left});
                         });
                     });
                 }

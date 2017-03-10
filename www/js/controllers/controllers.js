@@ -356,7 +356,9 @@ angular.module('starter')
       CheckNeedToReload($rootScope,'/circular-letter');
       
     })
-    .controller('ProfileCtrl', function($scope, UserProfileSQLite) {
+    .controller('ProfileCtrl', function($scope, UserProfileSQLite, $ionicPlatform, $ionicPopup, APIService) {
+      $ionicPlatform.ready(function(){
+
         UserProfileSQLite.GetUserProfile().then(
           function(response){
             if(response.rows != null && response.rows.length > 0){
@@ -370,12 +372,57 @@ angular.module('starter')
               $scope.profile.Position = result.Position;
               $scope.profile.OfficeTel = (result.OfficeTel && result.OfficeTel.length > 0) ? result.OfficeTel : '-';
               $scope.profile.OfficeFax = (result.OfficeFax && result.OfficeFax.length > 0) ? result.OfficeFax : '-';
-              $scope.profile.MobilePhone = (result.MobilePhone && result.MobilePhone.length > 0) ? response.MobilePhone : '-';
+              $scope.profile.MobilePhone = (result.MobilePhone && result.MobilePhone.length > 0) ? result.MobilePhone : '-';
               $scope.profile.eMailAddress = (result.eMailAddress && result.eMailAddress.length > 0) ? result.eMailAddress : '-';
               $scope.profile.Facebook = (result.Facebook && result.Facebook.length > 0) ? result.Facebook : '-';
               $scope.profile.Line = (result.Line && result.Line.length > 0) ? result.Line : '-';
             };
         })
+
+        $scope.editMobilePhone = function(){
+          var recentData = $scope.profile.MobilePhone;
+          //open popup edit mobile phone
+          var myPopup = $ionicPopup.show({
+            template: '<input type="text" ng-model="profile.MobilePhone">',
+            title: 'แก้ไขเบอร์โทรศัพท์มือถือ',
+            subTitle: '',
+            scope: $scope,
+            buttons: [
+              { text: 'ยกเลิก',onTap: function(){$scope.profile.MobilePhone = recentData;} },
+              {
+                text: '<b>แก้ไข</b>',
+                type: 'button-calm',
+                onTap: function(e) {
+                  if (!CheckIsNumber($scope.profile.MobilePhone)) {
+                    //invalid data
+                    OpenIonicAlertPopup($ionicPopup,'ข้อมูลไม่ถูกต้อง','ห้ามเป็นค่าว่าง และ เป็นตัวเลขเท่านั้น');
+                    e.preventDefault();
+                  } else {
+                    //todo post for update data (API 90)
+                    var url = APIService.hostname() + '/ContactDirectory/InsertUpdateContact';
+                    var postData = {EmpCode:window.localStorage.getItem('CurrentUserName'),ContactValue:$scope.profile.MobilePhone,ContactType:3,ContactPriority:1};
+                    APIService.ShowLoading();
+                    APIService.httpPost(url,postData,
+                      function(response){
+                        //edit mobile phone in sqlite
+                        UserProfileSQLite.UpdateUserProfile('MobilePhone',$scope.profile.MobilePhone).then(function(){
+                          APIService.HideLoading();
+                          OpenIonicAlertPopup($ionicPopup,'แก้ไขข้อมูล','แก้ไขข้อมูลเรียบร้อย');  
+                        },function(error){
+                          console.log(error);
+                          APIService.HideLoading();
+                          OpenIonicAlertPopup($ionicPopup,'แก้ไขข้อมูล','ไม่สามารถบันทึกข้อมูลในฐานข้อมูลได้');  
+                        })
+                      },
+                      function(error){$scope.profile.MobilePhone = recentData; console.log(error); APIService.HideLoading();})
+                  }
+                }
+              }
+            ]
+          });
+        };
+
+      });
     })
     .controller('TestSyncCtrl',function($scope,SyncService,TestSyncSQLite){
 

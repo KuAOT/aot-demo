@@ -179,18 +179,20 @@ angular.module('starter')
       var messageType = (onWeb) ? data.messageType : data.additionalData.messageType 
       var optData = (onWeb) ? data.optData : data.additionalData.optData;
       var menu = (onWeb) ? data.menu : data.additionalData.menu;
+      var message = '<div style="text-align: left !important;">' + data.message.replace(/(?:\r\n|\r|\n)/g, '<br />') + '</div>';
+      var title = data.title;
 
       //check if force logout from server
       if(alertType == "9"){
         if(AuthService.isAuthenticated()){
-          IonicAlert($ionicPopup,data.message,function(){AuthService.logout(true);return;});
+          IonicAlert($ionicPopup,message,function(){AuthService.logout(true);return;});
         }
         else return;
       }
       else{
         //check if messageType is hyperlink
         if(messageType == "1"){
-          IonicConfirm($ionicPopup,'แจ้งเตือน',data.message,function(){
+          IonicConfirm($ionicPopup,'แจ้งเตือน',message,function(){
             window.open(optData,'_system','location=no');
           });  
           // IonicConfirm($ionicPopup,'แจ้งเตือน','ต้องการเปิด link : ' + messageType.optData + ' ?',function(){
@@ -206,7 +208,8 @@ angular.module('starter')
             });
           }
           //just show message
-          else IonicAlert($ionicPopup,data.message,null);
+          else OpenIonicAlertPopup($ionicPopup,title,message);
+          //else IonicAlert($ionicPopup,message,null);
         }
       }
     };
