@@ -38,8 +38,10 @@ angular.module('starter')
           //check is server released new version? if have new version then confirm user to update on each store
           CheckDeviceIsValid(APIService,$q,window.localStorage.getItem('GCMToken')).then(function(response){
             if(response != null && response.data != null){
-              //check the store have newest version?
-              CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,response.data.LastestVersion);
+              //keep latest version
+              window.localStorage.setItem('LastestVersion',response.data.LastestVersion);
+              // //check the store have newest version?
+              // CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,response.data.LastestVersion);
             }
           });
 
@@ -121,6 +123,7 @@ angular.module('starter')
         $scope.InitialMenus = function(isAuthen,loginComplete){
           $scope.menus = [];
           if(isAuthen){
+            //bind menu after login
             $scope.menus.push({link:'#/app/selfservice',text:'Self Services',icon:'ion-ios-person'});
             $scope.menus.push({link:'#/app/information/hr',text:'ตรวจสอบข้อมูล',icon:'ion-information'});
             $scope.menus.push({link:'#/app/directory?pmroomid=0',text:'สมุดโทรศัพท์',icon:'ion-android-call'});
@@ -128,6 +131,8 @@ angular.module('starter')
             // $scope.menus.push({link:'#/app/duty',text:'จัดการเวร',icon:'ion-ios-body-outline'});
             $scope.menus.push({link:'#/app/notihistory',text:'ประวัติแจ้งเตือน',icon:'ion-android-refresh'});
             if(loginComplete == null){
+              //check the store have newest version after login complete?
+              CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,window.localStorage.getItem('LastestVersion'));
               //post to get MenuNotSeen to remove it.
               APIService.ShowLoading();
               var url = APIService.hostname() + '/DeviceRegistered/DisplayMenu';
@@ -147,8 +152,8 @@ angular.module('starter')
                 APIService.HideLoading();
               },function(error){console.log(error);APIService.HideLoading();});
             }
+            $scope.menus.push({link:'#/app/home/circular-letter',text:'ข่าวสาร ทอท.',icon:'ion-clipboard'});
           }
-          $scope.menus.push({link:'#/app/home/circular-letter',text:'ข่าวสาร ทอท.',icon:'ion-clipboard'});
           $scope.menus.push({link:'#/app/stock',text:'ราคาหุ้น',icon:'ion-ios-pulse-strong'});
           $scope.menus.push({link:'#/app/aotlive',text:'AOT-Live',icon:'ion-social-youtube'});
           $scope.menus.push({link:'#/app/feedback',text:'เสนอความคิดเห็น',icon:'ion-paper-airplane'});

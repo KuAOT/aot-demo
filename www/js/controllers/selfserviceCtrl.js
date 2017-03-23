@@ -276,7 +276,7 @@ angular.module('starter')
 	
 })
 
-.controller('ChangePasswordCtrl',function($scope,APIService,$cordovaNetwork,$ionicPopup,XMPPApiService,$ionicPlatform){
+.controller('ChangePasswordCtrl',function($scope,APIService,$cordovaNetwork,$ionicPopup,XMPPApiService,$ionicPlatform,AuthService){
 
 	$ionicPlatform.ready(function(){
 		$scope.changePassword = {oldPassword:'',newPassword:'',confirmNewPassword:''};
@@ -295,8 +295,11 @@ angular.module('starter')
 		      	APIService.ShowLoading();
 		      	//post to change password AD
 		      	APIService.httpPost(url,data,function(response){
-		      		IonicAlert($ionicPopup,'เปลี่ยนรหัสผ่านเรียบร้อย');
 		      		APIService.HideLoading();
+		      		IonicAlert($ionicPopup,'เปลี่ยนรหัสผ่านเรียบร้อย');
+		      		AuthService.logout(false);
+		      		// if(response != null && response.data._successField) IonicAlert($ionicPopup,'เปลี่ยนรหัสผ่านเรียบร้อย');
+		      		// else IonicAlert($ionicPopup,response.data._errorMessageField);
 		        	// //change password openfire
 		        	// XMPPApiService.ChangePassword(window.localStorage.getItem("CurrentUserName"),$scope.changePassword.newPassword).then(function(response){
 		        	// 	IonicAlert($ionicPopup,'เปลี่ยนรหัสผ่านเรียบร้อย');

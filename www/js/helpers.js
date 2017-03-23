@@ -748,8 +748,8 @@ function CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,lates
         console.log('deviceVersion',version);
         console.log('latestVersion',latestVersion);
         var deviceInfo = $cordovaDevice.getDevice();
-        //don't show update button in iOS device(can't approved Itune Connect review)
-        if(deviceInfo.platform == 'iOS') return resolve(true);
+        // //don't show update button in iOS device(can't approved Itune Connect review)
+        // if(deviceInfo.platform == 'iOS') return resolve(true);
         if(version != latestVersion){
            var confirmPopup = $ionicPopup.confirm({
              title: 'มี Version ใหม่',
@@ -760,7 +760,7 @@ function CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,lates
                 text:'ตกลง',
                 type: 'button-positive',
                 onTap:function(){
-                  // //update version (get url from api and redirect to each store)
+                  //update version (get url from api and redirect to each store)
                   var key;
                   if(deviceInfo.platform == 'Android') key = 'PlayStoreURL';
                   else key = 'AppStoreURL';
@@ -1177,12 +1177,24 @@ function CheckURLIsSelfService (url) {
 
 function ProcessRedirect(url) {
   if(!url || url.length <= 0) return;
-  //check is selfservice menu, Yes redirect with other logic, No redirect by link
-  if(CheckURLIsSelfService(url)) RedirectSelfServiceMenu(url,false);
-  else{
-    needReload = false;
-    window.location.href = '#/app' + url;  
+  //check is external url?
+  if(IsExternalURL(url)){
+    window.open(url,'_system','location=no');
   }
+  else
+  {
+    //check is selfservice menu, Yes redirect with other logic, No redirect by link
+    if(CheckURLIsSelfService(url)) RedirectSelfServiceMenu(url,false);
+    else{
+      needReload = false;
+      window.location.href = '#/app' + url;  
+    }  
+  }  
+};
+
+function IsExternalURL (url) {
+  if(url.indexOf('http') != -1) return true;
+  else return false;
 };
 
 function RedirectSelfServiceMenu (url,onlyGetUrl) {

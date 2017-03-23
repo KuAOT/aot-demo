@@ -159,13 +159,13 @@ angular.module('starter')
                 SyncService.SyncTime().then(function(){
                     FinalActionInfo($scope,APIService);
                     GetAllTimes($scope,TimeAttendanceSQLite);
-                    InitialTimeInfo($scope,$q,$filter,TimeAttendanceSQLite);
+                    InitialTimeInfo($scope,$q,$filter,TimeAttendanceSQLite,APIService);
                 });    
             }
             else{
                 //no internet connection
                 GetAllTimes($scope,TimeAttendanceSQLite);
-                InitialTimeInfo($scope,$q,$filter,TimeAttendanceSQLite);  
+                InitialTimeInfo($scope,$q,$filter,TimeAttendanceSQLite,APIService);  
             } 
 
             $scope.BindList = function(){
@@ -215,7 +215,7 @@ angular.module('starter')
                     TimeAttendanceSQLite.GetTimeAttendances().then(function(response){
                         $scope.allTADatas = ConvertQueryResultToArray(response);
                     });
-                    InitialTimeInfo($scope,$q,$filter,TimeAttendanceSQLite);    
+                    InitialTimeInfo($scope,$q,$filter,TimeAttendanceSQLite,APIService);    
                 }
             };
 
@@ -364,7 +364,7 @@ angular.module('starter')
         };
 
     })
-    .controller('MedicalCtrl', function($scope, $stateParams, $filter, MedicalSQLite, SyncService, $rootScope, $ionicPlatform, $ionicPopup) {
+    .controller('MedicalCtrl', function($scope, $stateParams, $filter, MedicalSQLite, SyncService, $rootScope, $ionicPlatform, $ionicPopup, $cordovaNetwork, APIService) {
         $ionicPlatform.ready(function(){
             //bind ddl fiscal year
             BindDDLInfoFiscalYear($scope);
@@ -482,6 +482,29 @@ angular.module('starter')
                         }
                     }
                 });
+            };
+
+            //pull to sync data
+            $scope.Refresh = function(){
+                //if no internet connection
+                if(!CheckNetwork($cordovaNetwork)){
+                    OpenIonicAlertPopup($ionicPopup,'ไม่มีสัญญานอินเตอร์เนท','ไม่สามารถใช้งานส่วนนี้ได้เนื่องจากไม่ได้เชื่อมต่ออินเตอร์เนท');
+                    FinalActionInfo($scope,APIService);
+                }
+                else{
+                    APIService.ShowLoading();
+                    //***Medical
+                    SyncService.SyncMedical().then(function(numberOfNewData){
+                        //bind ddl fiscal year
+                        BindDDLInfoFiscalYear($scope);
+                        InitialFiltersMedical($scope,MedicalSQLite);
+                        $scope.notFoundData = false;
+                        //initial
+                        $scope.ProcessMedical($scope.ddlFiscalYear.selectedOptions.val);
+                        FinalActionInfo($scope,APIService);
+                    });
+                    //***Medical
+                }
             };
 
             //initial
@@ -673,7 +696,7 @@ angular.module('starter')
         }
 
     })
-    .controller('TuitionCtrl', function($scope, $filter, TuitionSQLite, SyncService, $rootScope, $ionicPlatform) {
+    .controller('TuitionCtrl', function($scope, $filter, TuitionSQLite, SyncService, $rootScope, $ionicPlatform, $cordovaNetwork, APIService) {
         $ionicPlatform.ready(function(){
             //set new tuition info = 0 on financial view
             $rootScope.$broadcast('seenTuitionInfo',null);
@@ -730,6 +753,27 @@ angular.module('starter')
                         $scope.TuitionInfo = $scope.CreateTuitionInfo(result);
                     }
                 });
+            };
+
+            //pull to sync data
+            $scope.Refresh = function(){
+                //if no internet connection
+                if(!CheckNetwork($cordovaNetwork)){
+                    OpenIonicAlertPopup($ionicPopup,'ไม่มีสัญญานอินเตอร์เนท','ไม่สามารถใช้งานส่วนนี้ได้เนื่องจากไม่ได้เชื่อมต่ออินเตอร์เนท');
+                    FinalActionInfo($scope,APIService);
+                }
+                else{
+                    APIService.ShowLoading();
+                    SyncService.SyncTuition().then(function(numberOfNewData){
+                        //set new tuition info = 0 on financial view
+                        $rootScope.$broadcast('seenTuitionInfo',null);
+                        //bind ddl fiscal year
+                        BindDDLInfoFiscalYear($scope);
+                        //initial
+                        $scope.ProcessTuition($scope.ddlFiscalYear.selectedOptions.val);
+                        FinalActionInfo($scope,APIService);
+                    }); 
+                }
             };
 
             //initial
@@ -916,7 +960,8 @@ function InitialRoyalInfo($scope,RoyalSQLite,$filter){
     })
 };
 
-function InitialTimeInfo($scope,$q,$filter,TimeAttendanceSQLite){
+function InitialTimeInfo($scope,$q,$filter,TimeAttendanceSQLite,APIService){
+    APIService.ShowLoading();
     GetTimeDDLOptionsOnlyHaveData($filter,$q,TimeAttendanceSQLite).then(
         function(response){
             $scope.ddlMonthsData = response;
@@ -1133,14 +1178,14 @@ function ProcessSyncTimeData($scope,TimeAttendanceSQLite,APIService,AuthService,
                         TimeAttendanceSQLite.DeleteAllTimeAttendance().then(function(){
                             //save to sqlite
                             TimeAttendanceSQLite.SaveTimeAttendances(result).then(function(){
-                                InitialTimeInfo($scope,$filter);
+                                InitialTimeInfo($scope,$filter,APIService);
                             });
                         });
                     }
                     //save to sqlite
                     else {
                         TimeAttendanceSQLite.SaveTimeAttendances(result).then(function(){
-                            InitialTimeInfo($scope,$filter);    
+                            InitialTimeInfo($scope,$filter,APIService);    
                         });    
                     }
                 }
