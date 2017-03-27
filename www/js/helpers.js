@@ -749,7 +749,7 @@ function CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,lates
         console.log('latestVersion',latestVersion);
         var deviceInfo = $cordovaDevice.getDevice();
         // //don't show update button in iOS device(can't approved Itune Connect review)
-        // if(deviceInfo.platform == 'iOS') return resolve(true);
+        if(deviceInfo.platform == 'iOS') return resolve(true);
         if(version != latestVersion){
            var confirmPopup = $ionicPopup.confirm({
              title: 'มี Version ใหม่',
