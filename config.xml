@@ -16,6 +16,7 @@
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
+    <preference name="ShowSplashScreen" value="false" />
     <allow-intent href="mailto:*" />
     <allow-intent href="tel:*" />
     <allow-intent href="sms:*" />
