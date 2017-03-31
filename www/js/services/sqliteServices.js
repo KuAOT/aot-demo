@@ -325,7 +325,7 @@ angular.module('starter')
 
 	this.GetMedicals = function(fiscalYear){
 		//return SQLiteService.Execute("SELECT * FROM medical where SUBSTR(docdate,5,4) = '" + fiscalYear + "'").then(function(response){return response;},function(error){return error;});
-		return SQLiteService.Execute("SELECT * FROM medical where " + GetConditionFiscalYearStr(fiscalYear,'docdate')).then(function(response){return response;},function(error){return error;});
+		return SQLiteService.Execute("SELECT * FROM medical where " + GetConditionFiscalYearStr(fiscalYear,'docdate') + " ORDER BY CAST(SUBSTR(docdate,5,4) AS INT) DESC, CAST(SUBSTR(docdate,3,2) AS INT) DESC, CAST(SUBSTR(docdate,1,2) AS INT) DESC").then(function(response){return response;},function(error){return error;});
 	};
 
 	this.GetDistinctPaidDate = function(){

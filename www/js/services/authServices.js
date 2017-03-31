@@ -139,7 +139,14 @@ angular.module('starter')
                             window.localStorage.setItem("CurrentUserName", user);
                             //window.localStorage.setItem("AuthServices_password", pw);
                             window.localStorage.setItem(AUTH_EVENTS.LOCAL_USERNAME_KEY, username);
-                            useCredentials(function () { APIService.HideLoading(); resolve('Login success.'); },null);
+                            useCredentials(function () { 
+                                APIService.HideLoading();
+                                if(pw.length <= 7) {
+                                    //if password less than 7 characters, Warning user for change password
+                                    IonicAlert($ionicPopup,'กรุณาเปลี่ยนรหัสผ่านของท่านให้มีความยาวมากกว่า 7 ตัวอัษร',null);
+                                }
+                                resolve('Login success.');
+                              },null);
                         }
                         else{
                             var result = response.data;
@@ -149,7 +156,14 @@ angular.module('starter')
                                 window.localStorage.setItem("CurrentUserName", user);
                                 //window.localStorage.setItem("AuthServices_password", pw);
                                 window.localStorage.setItem(AUTH_EVENTS.LOCAL_USERNAME_KEY, username);
-                                useCredentials(function () { APIService.HideLoading(); resolve('Login success.'); },null);
+                                useCredentials(function () { 
+                                    APIService.HideLoading();
+                                    if(pw.length <= 7) {
+                                        //if password less than 7 characters, Warning user for change password
+                                        IonicAlert($ionicPopup,'กรุณาเปลี่ยนรหัสผ่านของท่านให้มีความยาวมากกว่า 7 ตัวอัษร',null);
+                                    }
+                                    resolve('Login success.');
+                                },null);
                             }
                             else {
                                 APIService.HideLoading();
@@ -188,8 +202,10 @@ angular.module('starter')
                                     //check user open app from notification?
                                     if(notiData != null){
                                         var menu = (onWeb) ? notiData.menu : notiData.additionalData.menu;
-                                        //get url from notification payload
-                                        returnURL = GetRedirectURL(menu).replace(/\//g,'$').replace(/\=/g,'|'); //if first run user have to authen pin first then redirect to specific url
+                                        if(menu && menu.length > 0){
+                                            //get url from notification payload
+                                            returnURL = GetRedirectURL(menu).replace(/\//g,'$').replace(/\=/g,'|'); //if first run user have to authen pin first then redirect to specific url    
+                                        }
                                     }
                                     ProcessAuthenPIN ($q,APIService,returnURL,$ionicPopup);
                                     resolve('authen_pin');

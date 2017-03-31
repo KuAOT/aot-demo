@@ -28,7 +28,7 @@
 
         <label class="item item-input item-stacked-label login_input" ng-class="{ 'has-errors' : logInForm.password.$invalid, 'no-errors' : logInForm.password.$valid}">
           <!-- <span class="input-label">Password</span> -->
-          <input type="password" name='password' placeholder="รหัสผ่านที่ใช้งาน internet ทอท."  ng-model="loginData.password" ng-minlength='8' ng-maxlength='24' required>
+          <input type="password" name='password' placeholder="รหัสผ่านที่ใช้งาน internet ทอท."  ng-model="loginData.password" ng-minlength='7' ng-maxlength='24' required>
         </label>
         <div class="error-container" ng-show="logInForm.password.$error" ng-messages="logInForm.$submitted && logInForm.password.$error">
           <div ng-messages-include="error-list.html"></div>

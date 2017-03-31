@@ -1009,10 +1009,10 @@ function LoopSaveEmployeeFiles($cordovaFile,$q,data) {
     var end = divideResult;
     var count = 0;
     while (index <= totalEmployeeFiles) {
-      var eachArr = index != totalEmployeeFiles ? data.slice(start,end) : data.slice(start);
+      var eachData = index != totalEmployeeFiles ? EncryptData(JSON.stringify(data.slice(start,end)),'E$m#p%') : EncryptData(JSON.stringify(data.slice(start)),'E$m#p%');
       var filename = employeeFileName + index + '.txt';
       //create file
-      CreateFile($cordovaFile,$q,filename,JSON.stringify(eachArr)).then(function(){
+      CreateFile($cordovaFile,$q,filename,eachData).then(function(){
         count++;
         if(count == totalEmployeeFiles) return resolve(true);
       });
@@ -1031,7 +1031,7 @@ function ReadEmployeeMasterData($q,APIService,$cordovaFile){
       for (var i = 1; i <= totalEmployeeFiles; i++) {
         var filename = employeeFileName + i + '.txt';
         ReadFile($cordovaFile,$q,APIService,filename).then(function(response){
-          if(response != null) result = result.concat(JSON.parse(response));
+          if(response != null) result = result.concat(JSON.parse(DecryptData(response,'E$m#p%')));
           count++;
           if(count == totalEmployeeFiles) return resolve(result);
         });   
@@ -1333,3 +1333,11 @@ function CheckIsNumber(data){
   var isnum = /^\d+$/.test(data);
   return isnum;
 }
+
+function EncryptData (data,key) {
+  return CryptoJS.AES.encrypt(data, key).toString();
+};
+
+function DecryptData (data,key) {
+  return CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8);
+};
