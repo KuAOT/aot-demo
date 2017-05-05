@@ -57,6 +57,15 @@ angular.module('starter')
         }
       }
   })
+  .state('app.help_resetpassword', {
+      url: '/helpresetpassword',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/help/help_resetpassword.html',
+          controller:'HelpResetPasswordCtrl'
+        }
+      }
+  })
 })
 
 .controller('MainCtrl',function($scope){
@@ -520,6 +529,61 @@ angular.module('starter')
         dots[$scope.pin.length].className = 'dot';
       }
     };
+
+  });
+})
+
+.controller('HelpResetPasswordCtrl',function($scope,APIService,$cordovaNetwork,$ionicPopup,$ionicPlatform,ionicDatePicker){
+  $ionicPlatform.ready(function() {
+
+    var defaultDate1,defaultDate2;
+    var datePicker1;
+
+    //if no internet connection
+    if(!CheckNetwork($cordovaNetwork)){
+      $scope.noInternet = true;
+      OpenIonicAlertPopup($ionicPopup,'ไม่มีสัญญานอินเตอร์เนท','ไม่สามารถใช้งานส่วนนี้ได้เนื่องจากไม่ได้เชื่อมต่ออินเตอร์เนท');
+    }
+
+    defaultDate1 = new Date();
+    defaultDate1.setDate(defaultDate1.getDate() - 7300);
+    datePicker1 = {callback: function (val) { SetSelectedDate(val);},
+      inputDate:defaultDate1
+    };
+
+    $scope.OpenDatePicker = function(){
+      ionicDatePicker.openDatePicker(datePicker1);
+    };
+
+    function SetSelectedDate (val) {
+      var selectedDate = new Date(val);
+      console.log(selectedDate);
+      var result = ConvertDateObjToSlashFormat(selectedDate);
+      $scope.birthDate = result;
+    };
+
+    $scope.resetPassword = function(form){
+      if(form.$valid) {
+        if(BirthDateIsValid()){
+          APIService.ShowLoading();
+          var url = APIService.hostname() + '/Authen/ResetPassword';
+          var data = {userName:$scope.resetPassword.emplCode,ccid:$scope.resetPassword.citizenId,birthdate:$scope.birthDate.replace(/\//g,'')};
+          APIService.httpPost(url,data,function(response){
+            APIService.HideLoading();
+            if(response != null && response.data != null){
+              OpenIonicAlertPopup($ionicPopup,'รีเซตรหัสผ่าน','ระบบได้ทำการ Reset Password ของท่านแล้ว Password ใหม่คือ AOT+หมายเลข 5 ตัวหลังของบัตรประชาชน');
+              window.location = '#/app/firstpage';
+            }
+          },function(error){APIService.HideLoading();console.log(error);});
+        }
+        else { OpenIonicAlertPopup($ionicPopup,'รีเซตรหัสผ่าน','ต้องเลือกวันเกิด'); } 
+      }
+    }
+
+    function BirthDateIsValid(){
+      if(!$scope.birthDate || $scope.birthDate.length == 0) return false
+      else return true
+    }
 
   });
 })
