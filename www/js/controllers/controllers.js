@@ -130,6 +130,7 @@ angular.module('starter')
             if(!onWeb) $scope.menus.push({link:'#/app/qrcode',text:'QR-Code',icon:'ion-qr-scanner'});
             // $scope.menus.push({link:'#/app/duty',text:'จัดการเวร',icon:'ion-ios-body-outline'});
             $scope.menus.push({link:'#/app/notihistory',text:'ประวัติแจ้งเตือน',icon:'ion-android-refresh'});
+            $scope.menus.push({link:'#/app/welldonecard',text:'Welldone',icon:'ion-android-contacts'});
             if(loginComplete == null){
               //check the store have newest version after login complete?
               CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,window.localStorage.getItem('LastestVersion'));

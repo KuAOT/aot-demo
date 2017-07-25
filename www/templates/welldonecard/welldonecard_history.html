@@ -1,0 +1,33 @@
+<style type='text/css'>
+  .imgSatisfaction{
+    width:25px;
+    height:25px;
+  }
+</style>
+
+<ion-view cache-view="false" view-title="ประวัติ">
+    <ion-content>
+  	
+  		<div class='list'>
+
+        <div ng-repeat='history in wcHistory'>
+
+          <div ng-show='history.SignatureObject && history.SignatureObject.length > 0' class='item item-thumbnail-left item-text-wrap'>
+            <img ng-src='data:image/png;base64,{{history.SignatureObject}}' ng-click='openModal({{history.Index}})' />
+            <p><b>ผู้ส่ง:{{history.Emp_Sender}}</b></p>
+            <p><b>ผู้รับ{{history.Emp_Receive}}</b></p>
+            <p>{{history.Message}} , {{history.Satisfaction}}</p> 
+          </div>
+
+          <div ng-show='!history.SignatureObject || history.SignatureObject.Length == 0' class='item item-text-wrap'>
+            <p><b>ผู้ส่ง:{{history.Emp_Sender}}</b></p>
+            <p><b>ผู้รับ{{history.Emp_Receive}}</b></p>
+            <p>{{history.Message}} , <img class='imgSatisfaction' src="img/satisfaction/{{history.Satisfaction}}.png"></p> 
+          </div>
+
+        </div>
+
+  		</div>
+
+    </ion-content>
+</ion-view>

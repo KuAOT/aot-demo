@@ -1,0 +1,78 @@
+<style type='text/css'>
+  .satisfactionImg{
+    width:40px;
+    height: 40px;
+  }
+  .previewImg{
+    margin-top: 10px;
+    width:100px;
+    height: 100px;
+  }
+</style>
+
+<ion-view cache-view="false" view-title="ส่งคำชม">
+    <ion-content>
+  		
+  		<div class='list'>
+
+        <div class='item item-divider'>
+          พนักงาน
+        </div>
+
+        <div class="bar bar-header item-input-inset">
+          <label class="item-input-wrapper">
+            <i class="icon ion-ios-search placeholder-icon"></i>
+            <!-- <input type="search" ng-model='searchEmp.searchTxt' placeholder="รหัสพนักงานเท่านั้น"> -->
+            <input ion-autocomplete type="search" readonly="readonly" class="ion-autocomplete" autocomplete="off"
+                       ng-model="searchEmp.searchTxt"
+                       item-value-key="EC"
+                       item-view-value-key="NM"
+                       items-method="getEmployees(query)"
+                       items-method-value-key="items"
+                       placeholder="ชื่อ/รหัสพนักงาน"
+                       items-clicked-method="itemsClicked(callback)"
+                       items-removed-method="itemsRemoved(callback)"
+                       max-selected-items="1"/>
+          </label>
+        </div>
+
+        <div class='item item-divider'>
+          ข้อความ
+        </div>
+
+        <label class="item item-input padding">
+          <textarea ng-model='sendwc.message'></textarea>
+        </label>
+
+        <div class='item item-divider'>
+          ระดับความพึงพอใจ
+        </div>
+
+        <ion-list>
+          <ion-radio ng-model="sendwc.satisfactionID" ng-value="1"><img src='img/satisfaction/1.png' class='satisfactionImg' /></ion-radio>
+          <ion-radio ng-model="sendwc.satisfactionID" ng-value="2"><img src='img/satisfaction/2.png' class='satisfactionImg' /></ion-radio>
+          <ion-radio ng-model="sendwc.satisfactionID" ng-value="3"><img src='img/satisfaction/3.png' class='satisfactionImg' /></ion-radio>
+          <ion-radio ng-model="sendwc.satisfactionID" ng-value="4"><img src='img/satisfaction/4.png' class='satisfactionImg' /></ion-radio>
+        </ion-list>
+
+        <div class='item item-divider'>
+          รูปภาพ
+        </div>
+
+        <div class='item'>
+          <input type='button' ng-click='UploadImage()' class='button button-calm' value='เลือกรูปภาพ' />
+          <div ng-show='sendwc.imageData && sendwc.imageData.length > 0'>
+            <img ng-src="data:image/png;base64,{{sendwc.imageData}}" class='previewImg'>
+          </div>
+        </div>
+
+  			<div>
+  				<input type='button' ng-disabled='noInternet' ng-click='doSendWC()' class='button button-block button-calm' value='ตกลง' />
+  			</div>
+
+  		</div>
+
+
+
+    </ion-content>
+</ion-view>
