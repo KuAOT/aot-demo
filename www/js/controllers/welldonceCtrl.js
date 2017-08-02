@@ -202,6 +202,7 @@ angular.module('starter')
 
 		$scope.noInternet = false;
 		$scope.emplData;
+		$scope.currentEmpl = window.localStorage.getItem('CurrentUserName');
 		//read employee master data from file
 		ReadEmployeeMasterData($q,APIService,$cordovaFile).then(function(response){
 			if(response != null) {
@@ -219,7 +220,7 @@ angular.module('starter')
      	$scope.InitialWelldoneCardHistory = function(){
      		if($scope.noInternet) return;
      		var url = APIService.hostname() + '/WellDone/CardHistory';
-	        var data = {EmpID:window.localStorage.getItem('CurrentUserName')};
+	        var data = {EmpID:$scope.currentEmpl};
 	        APIService.ShowLoading();
 	        APIService.httpPost(url,data,function(response){
 	        	APIService.HideLoading();
@@ -238,7 +239,9 @@ angular.module('starter')
 				var currentSenderEmpl = {items:filterEmployees($scope.emplData,data[i].EmpID_Sender)}
      			$scope.wcHistory.push({Emp_Receive:currentReceiveEmpl != null ? currentReceiveEmpl.items[0].NM : data[i].EmpID_Receive, 
      								   Emp_Sender:currentSenderEmpl != null ? currentSenderEmpl.items[0].NM : data[i].EmpID_Sender, 
-     								   Message:data[i].Message, Satisfaction:data[i].Satisfaction, SignatureObject:data[i].Image, Index:i});
+     								   Message:data[i].Message, Satisfaction:data[i].Satisfaction, SignatureObject:data[i].Image, Index:i,
+     								   Class: $scope.currentEmpl == data[i].EmpID_Sender ? 'sender' : 'receive',
+     								   CreateDate: data[i].CreateDate});
      			$scope.signatureArr.push(data[i].Image);
      		};
      	}
