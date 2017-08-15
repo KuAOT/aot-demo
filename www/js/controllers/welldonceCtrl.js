@@ -287,7 +287,7 @@ angular.module('starter')
      		for (var i = 0; i <= data.length - 1; i++) {
 				var currentEmpl = {items:filterEmployees($scope.emplData,data[i].EmpID_Receive)}
      			$scope.wcStats.push({Empl:currentEmpl != null ? currentEmpl.items[0].NM : data[i].EmpID_Receive, Satisfaction1:data[i].Satisfaction1,
-     								 Satisfaction2:data[i].Satisfaction2, Satisfaction3:data[i].Satisfaction3, Satisfaction4:data[i].Satisfaction4});
+     								 Satisfaction2:data[i].Satisfaction2, Satisfaction3:data[i].Satisfaction3, Satisfaction4:data[i].Satisfaction4, Satisfaction5:data[i].Satisfaction5});
      		};
      	}
 
