@@ -192,6 +192,10 @@ angular.module('starter')
 			})
 		};
 
+		$scope.RemoveUploadImage = function(){
+			$scope.sendwc.imageData = '';
+		}
+
 	});
 })
 

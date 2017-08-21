@@ -41,7 +41,7 @@ angular.module('starter')
               //keep latest version
               window.localStorage.setItem('LastestVersion',response.data.LastestVersion);
               // //check the store have newest version?
-              // CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,response.data.LastestVersion);
+              CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,response.data.LastestVersion);
             }
           });
 

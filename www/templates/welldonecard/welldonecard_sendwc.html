@@ -77,8 +77,11 @@
 
         <div class='item'>
           <input type='button' ng-click='UploadImage()' class='button button-calm' value='เลือกรูปภาพ' />
-          <div ng-show='sendwc.imageData && sendwc.imageData.length > 0'>
+          <div ng-show='sendwc.imageData && sendwc.imageData.length > 0' class='item item-button-right'>
             <img ng-src="data:image/png;base64,{{sendwc.imageData}}" class='previewImg'>
+            <button class='button button-assertive' ng-click='RemoveUploadImage()'>
+              <i class='icon ion-close-circled'></i>
+            </button>
           </div>
         </div>
 
