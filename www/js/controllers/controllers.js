@@ -40,8 +40,8 @@ angular.module('starter')
             if(response != null && response.data != null){
               //keep latest version
               window.localStorage.setItem('LastestVersion',response.data.LastestVersion);
-              // //check the store have newest version?
-              CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,response.data.LastestVersion);
+              //check the store have newest version?
+              //CheckUpdateNewestVersion($q,$cordovaDevice,$ionicPopup,APIService,response.data.LastestVersion);
             }
           });
 
