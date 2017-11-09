@@ -684,8 +684,17 @@ angular.module('starter')
 		function SetSelectedDate (val,isStartDate) {
 			var selectedDate = new Date(val);
 			var result = ConvertDateObjToSlashFormat(selectedDate);
-			if(isStartDate) $scope.selectedDate.startDate = result;
-			else $scope.selectedDate.endDate = result;
+			if(isStartDate)
+			{
+				$scope.selectedDate.startDate = result;	
+				defaultDate1 = selectedDate;
+				AdjustEndDate();
+			} 
+			else
+			{
+				$scope.selectedDate.endDate = result;
+				defaultDate2 = selectedDate;
+			} 
 		};
 
 		function InitialStartAndEndDate () {
@@ -740,12 +749,26 @@ angular.module('starter')
 
 		$scope.IncrementDuration = function(){
 			$scope.leave.duration += 0.5;
+			AdjustEndDate();
 		};
 
 		$scope.DecreaseDuration = function(){
 			$scope.leave.duration -= 0.5;
 			if($scope.leave.duration < 0.5) $scope.leave.duration = 0.5;
+			AdjustEndDate();
 		};
+
+		function AdjustEndDate(){
+			//set enddate = startdate + 1
+			if($scope.leave.duration > 1){
+				//set endate +1 startdate
+				SetSelectedDate(defaultDate2.setDate(defaultDate1.getDate() + 1), false);
+			}
+			else{
+				//set enddate = startdate
+				SetSelectedDate(defaultDate1, false);
+			}
+		}
 
 		$scope.CreateLeave = function(){
 			if(!CheckDateValidation($ionicPopup,$scope.selectedDate.startDate,$scope.selectedDate.endDate)) return;
