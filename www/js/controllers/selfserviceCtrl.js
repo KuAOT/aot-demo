@@ -688,6 +688,7 @@ angular.module('starter')
 			{
 				$scope.selectedDate.startDate = result;	
 				defaultDate1 = selectedDate;
+				console.log('aaa');
 				AdjustEndDate();
 			} 
 			else
@@ -762,7 +763,9 @@ angular.module('starter')
 			//set enddate = startdate + 1
 			if($scope.leave.duration > 1){
 				//set endate +1 startdate
-				SetSelectedDate(defaultDate2.setDate(defaultDate1.getDate() + 1), false);
+				defaultDate2 = new Date(defaultDate1.getTime());
+				defaultDate2.setDate(defaultDate2.getDate() + 1)
+				SetSelectedDate(defaultDate2, false);
 			}
 			else{
 				//set enddate = startdate
